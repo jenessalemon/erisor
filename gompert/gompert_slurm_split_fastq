@@ -1,0 +1,30 @@
+#!/bin/csh
+#SBATCH --time=72:00:00   	 # walltime, abbreviated by -t
+#SBATCH --nodes=1         	 # number of cluster nodes, abbreviated by -N
+#SBATCH -o gompert1-%j.out-%N	 # name of the stdout, using the job number (%j) and the first node (%N)
+#SBATCH -e gompert1-%j.err-%N	 # name of the stderr, using job and first node values
+#SBATCH --ntasks=1       	 # number of MPI tasks, abbreviated by -n
+# additional information for allocated clusters
+#SBATCH --account=wolf   	 # account - abbreviated by -A
+#SBATCH --partition=ember    # partition, abbreviated by -p
+#SBATCH --mail-type=END
+#SBATCH --mail-user=jenessa.lemon@gmail.com
+#
+# set data and working directories
+setenv WORKDIR $HOME/erisor/
+setenv SCRDIR /scratch/local/u6009817/erio/
+mkdir -p $SCRDIR
+cp -r $WORKDIR/* $SCRDIR
+cd $SCRDIR
+#
+# load appropriate modules
+module load perl
+#
+# run the program
+splitFastqs.pl ids.txt parsed*.fastq
+#
+# remove similarly named files and transfer output
+rsync -avz parsed*.fastq /uufs/chpc.utah.edu/common/home/u6009817/erisor/gomp_out/ 
+#
+# add line to remove all files from scratch directory
+rm -r *

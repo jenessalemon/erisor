@@ -1,0 +1,7 @@
+erisor_outfiles
+msl40_outfiles
+erisor_reps_*
+erisor_reps-tmpalign
+*.json
+ERISOR_S2_L002_R1_001.fastq.gz
+

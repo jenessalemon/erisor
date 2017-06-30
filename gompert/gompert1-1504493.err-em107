@@ -1,0 +1,5 @@
+cp: cannot stat ‘/uufs/chpc.utah.edu/common/home/u6009817/erisor//gompert1-1504422.err-em081’: No such file or directory
+cp: cannot stat ‘/uufs/chpc.utah.edu/common/home/u6009817/erisor//gompert1-1504422.out-em081’: No such file or directory
+Can't open perl script "": No such file or directory
+rsync: No match.
+rsync: No match.
