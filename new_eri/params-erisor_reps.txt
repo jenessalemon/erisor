@@ -1,8 +1,8 @@
 ------- ipyrad params file (v.0.7.1)--------------------------------------------
 erisor_reps                    ## [0] [assembly_name]: Assembly name. Used to name output directories for assembly steps
-/uufs/chpc.utah.edu/common/home/u6009817/new_eri                             ## [1] [project_dir]: Project dir (made in curdir if not present)
-/uufs/chpc.utah.edu/common/home/u6009817/new_eri/ERISOR_S2_L002_R1_001.fastq.gz                               ## [2] [raw_fastq_path]: Location of raw non-demultiplexed fastq files
-/uufs/chpc.utah.edu/common/home/u6009817/new_eri/ipy_barcodes.txt                               ## [3] [barcodes_path]: Location of barcodes file
+/uufs/chpc.utah.edu/common/home/u6009817/erisor/new_eri                             ## [1] [project_dir]: Project dir (made in curdir if not present)
+/uufs/chpc.utah.edu/common/home/u6009817/erisor/new_eri/ERISOR_S2_L002_R1_001.fastq.gz                               ## [2] [raw_fastq_path]: Location of raw non-demultiplexed fastq files
+/uufs/chpc.utah.edu/common/home/u6009817/erisor/new_eri/ipy_barcodes.txt                               ## [3] [barcodes_path]: Location of barcodes file
                                ## [4] [sorted_fastq_path]: Location of demultiplexed/sorted fastq files
 denovo                         ## [5] [assembly_method]: Assembly method (denovo, reference, denovo+reference, denovo-reference)
                                ## [6] [reference_sequence]: Location of reference sequence file

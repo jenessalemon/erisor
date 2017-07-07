@@ -5,8 +5,8 @@
 #SBATCH -e reps-%j.err-%N	 # name of the stderr, using job and first node values
 #SBATCH --ntasks=1               # number of MPI tasks, abbreviated by -n
 # additional information for allocated clusters
-#SBATCH --account=wolf           # account - abbreviated by -A
-#SBATCH --partition=ember        # partition, abbreviated by -p
+#SBATCH --partition=wolf-kp
+#SBATCH --account=wolf-kp
 #SBATCH --mail-type=END
 #SBATCH --mail-user=jenessa.lemon@gmail.com
 #
@@ -18,7 +18,7 @@ cp -r $WORKDIR/* $SCRDIR
 cd $SCRDIR
 #
 # run the program
-/uufs/chpc.utah.edu/common/home/u6009817/miniconda2/bin/ipyrad -p params-erisor_reps.txt -s 6
+/uufs/chpc.utah.edu/common/home/u6009817/miniconda2/bin/ipyrad -p params-erisor_reps.txt -s 7
 #
 # transfer output and remove scratch
 #cd ..
