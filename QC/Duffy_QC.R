@@ -8,7 +8,7 @@ library("ggplot2")
 library("adegenet")
 
 #Read in data
-obj1 <- read.structure("erisor_reps_9sout.str", n.ind = 262, n.loc = 1886, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
+obj1 <- read.structure("erisor_reps_9sout.str", n.ind = 262, n.loc = 4400, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
 # It will prompt for info:
 #   genotypes = 244  (number of samples) This number can be found in the ipyrad _stats file, I had 266 but I threw out two samples with no data. 
 #   markers = 1886 (number of loci) Also find in ipyrad _stats file.
@@ -17,20 +17,13 @@ obj1 <- read.structure("erisor_reps_9sout.str", n.ind = 262, n.loc = 1886, col.l
 #   other optional columns - just hit enter, there are none in our data
 #   row with the marker names = 0 (We don't have a marker names row)
 #   genotypes coded by a single row = n (We have 2 lines per sample in the dataset.)
-indNames(obj1) # I only get 238 because (24) low coverage individuals get filtered out.
+indNames(obj1) # I only get 247 because (24) low coverage individuals get filtered out.
 ploidy(obj1) # should return 2 since we gave it 2 alleles for each marker.
 
 
 #Neighbor joining euclidian distance tree
 D <- dist(tab(obj1))               #super hard to read, create a distance matrix! 
-
-#What does D look like?
 D                                  #0 means they are identical...and should be expected across the diagonal as each sample is identical to itself. 0s other than the diagonal better be replicates... Nas just mean that there are no loci in common between the two samples (we have no info ont their relatedness.)
-class(D)                           #dist
-attributes(D)
-str(D)
-D[100]                             #can index by row number
-D["p_019s_11"]                     #can index by sample name
 
 #Convert to matrix for indexing.
 M <- as(D, "matrix")               #Makes a normal matrix of the distance values.
@@ -80,6 +73,8 @@ index_to_samples(output)    #call the function with the output from "find_relati
 reps <- read.csv("list_of_replicates_first_library.csv", header = FALSE, sep = ",")
 reps.list <- as.list(as.data.frame(t(reps)))
 reps.list[3]
+reps16 <- c("p_001s_02", "p_001s_04", "p_026s_12", "p_027s_06", "p_026s_14", "p_002s_06", "p_030s_11", "p_009s_13", "p_1027s_12", "p_013s_01", "p_012s_05", "p_015s_15", "p_016s_14", "p_019s_13", "p_013s_05", "p_024s_04")
+reps16
 
 for(i in reps.list){
   print(i)
@@ -95,7 +90,8 @@ reps.list
 #Create a matrix that only retains line of replicate individuals, and apply to that entire matrix.
 
 replicate_matrix <- function(reps_list, matrix){       #create a matrix with only rows representing replicate samples
-  R <- matrix(nrow = length(reps_list), ncol = 238)    #Initialize an empty matrix
+  R <- matrix(nrow = length(reps_list), ncol = length(indNames(obj1))    #Initialize an empty matrix
+  print(str(R))
   for(row in row.names(matrix)){                       #M is the entire distance matrix
     if(row %in% reps_list == TRUE){                    #If the sample name is in the list of replciates
       R[row] <- M[row]                                 #add that row to our new matrix
@@ -103,8 +99,22 @@ replicate_matrix <- function(reps_list, matrix){       #create a matrix with onl
   }
   return(R)
 }
-R <- replicate_matrix(reps.list, M)
-str(R)
+rep_mat <- replicate_matrix(reps16, M)
+rep_mat
+str(rep_mat)
+##
+length(indNames(obj1)
+if("p_019s_13" %in% reps16 == TRUE){                    
+  print("hi")                                 
+}
+#works
+for(row in row.names(M)){                       #M is the entire distance matrix
+  if(row %in% reps16 == TRUE){                    #If the sample name is in the list of replciates
+    print("hello")                                 #add that row to our new matrix
+  }
+}
+#works
+
   
 find_my_replicates <- function(rep_matrix){              #take the output from replciate_matrix (line 97)
   for(row in rep_matrix){
