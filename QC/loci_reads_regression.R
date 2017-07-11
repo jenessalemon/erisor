@@ -7,6 +7,9 @@ reads_and_loci <- subset(stats, select = c("reads_raw", "loci_in_assembly"))
 summary(reads_and_loci)
 plot(reads_and_loci)
 
-fit <- lm(reads_raw ~ loci_in_assembly, data=stats)
+fit <- lm(reads_raw ~ loci_in_assembly, data=stats)   #linear regression
 summary(fit)
 plot(fit)
+
+loci_per_read <- loci_in_assembly/reads_raw
+mean(loci_per_read, na.rm=TRUE)               #0.0021
