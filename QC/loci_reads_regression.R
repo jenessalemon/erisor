@@ -13,3 +13,14 @@ plot(fit)
 
 loci_per_read <- loci_in_assembly/reads_raw
 mean(loci_per_read, na.rm=TRUE)               #0.0021
+lpr <- loci_per_read[!is.na(loci_per_read)]   #to get rid of the Na that is messing up my funciton
+count <- function(nums){
+  x=0
+  for(i in nums){
+    if(i >= .0021){
+     x=x+1
+    }
+  }
+  return(x)
+}
+count(lpr)                                    #gives number of samples that passed the filter
