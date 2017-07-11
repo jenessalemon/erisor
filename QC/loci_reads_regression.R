@@ -15,7 +15,7 @@ plot(fit)
 
 ##Which samples have less than 400,000 reads? (exclude)
 
-##Which samples have less than 70% expected loci? (exclude)
+##Which samples have greater than 70% expected loci?
 loci_per_read <- loci_in_assembly/reads_raw              #number of loci per read
 av_loci <- mean(loci_per_read, na.rm=TRUE)               #0.0021
 #lpr <- loci_per_read[!is.na(loci_per_read)]            #to get rid of the Na that is messing up my funciton
