@@ -12,6 +12,19 @@ summary(fit)
 plot(fit)
 
 ##Which samples already have 1,750 loci? (exclude)
+lia <- loci_in_assembly[!is.na(loci_in_assembly)]
+count_lia <- function(nums){
+  x=0
+  for(i in nums){
+    if(i >= 1750){
+      print(i)
+      x=x+1
+    }
+  }
+  print("Loci with more than 1750 loci:")
+  return(x)
+}
+count_lia(lia) 
 
 ##Which samples have less than 400,000 reads? (exclude)
 
@@ -23,14 +36,15 @@ expected_loci <- reads_raw*av_loci
 observed_vs_expected <- loci_in_assembly/expected_loci
 ove <- observed_vs_expected[!is.na(observed_vs_expected)] #to get rid of the Na that is messing up my funciton
 
-count <- function(nums){
+count_ove <- function(nums){
   x=0
   for(i in nums){
     if(i >= .70){
-      print(i)
-     x=x+1
+      #print(i)
+      x=x+1
     }
   }
+  print("More loci than expected (70%):")
   return(x)
 }
-count(ove)                  #gives number of samples that passed the filter
+count_ove(ove)                  #gives number of samples that passed the filter
