@@ -1,4 +1,4 @@
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/QC/') #remember to put the .str file there!
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/') #remember to put the .str file there!
 #install.packages("genetics")
 library("ape")
 library("genetics")        #there is no package called ‘genetics’ = install.packages("genetics")

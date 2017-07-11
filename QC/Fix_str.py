@@ -1,6 +1,6 @@
 import pandas as pd
 
-str_file = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/QC/erisor.str"
+str_file = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/erisor_reps.str"
 
 # Import the .str file into pandas.
 IN_STR = pd.read_csv(str_file, sep="\t", header=None)

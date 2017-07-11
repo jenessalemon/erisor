@@ -1,4 +1,4 @@
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/QC/')
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/')
 stats <- read.table("erisor_reps_stats.txt", header = TRUE, fill = TRUE)
 reads_raw <- stats[,2]
 loci_in_assembly <- stats[,9]
