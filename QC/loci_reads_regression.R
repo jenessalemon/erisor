@@ -63,3 +63,14 @@ count_ove <- function(nums){
 count_ove(ove)                  #gives number of samples have less loci than expected
 
 ##Now I need to put the three of them together, to see how many samples I am left with:
+how_many_reads <- function(readsAndLoci){
+  x=0
+  for(row in readsAndLoci){
+    if(reads_raw[row]>=400000 & loci_in_assembly<2000){
+      x=x+1
+    }
+  }
+  return(x)
+}
+how_many_reads(stats)
+reads_and_loci
