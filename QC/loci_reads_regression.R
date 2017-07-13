@@ -42,13 +42,20 @@ passed3                           #these are the candidates for the second libra
 #add a column to passed2?
 step3 <- passed2[c(1,2,3)] = multiple columns
 
-loci <- passed2$loci_in_assembly
-reads <- passed2$reads_raw
-loci_per_read <- loci/reads
-expected_loci <- reads*0.0021
-observed_vs_expected <- loci/expected_loci
+#simple setup calculations
+samples <- row.names(passed2)          #get the samples
+loci <- passed2$loci_in_assembly       #get the loci counts
+reads <- passed2$reads_raw             #get the read counts
+loci_per_read <- loci/reads            #how many reads per loci?
+expected_loci <- reads*0.0021          #reads*average # of loci per read gives the expected # of reads
+observed_vs_expected <- loci/expected_loci                      #observed over expected
+ove <- observed_vs_expected[!is.na(observed_vs_expected)]       #get rid of the NA
 
-seventy <- observed_vs_expected >= .7
+step3 = data.frame(samples, ove)
+
+result = samples$ove >= .70
+
+
 
 
 
