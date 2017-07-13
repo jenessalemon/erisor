@@ -63,14 +63,17 @@ count_ove <- function(nums){
 }
 count_ove(ove)                  #gives number of samples have less loci than expected
 
-##Now I need to put the three of them together, to see how many samples I am left with:
-##list the samples with less than 1750 loci
-L = stats$loci_in_assembly <= 1750
-L
-passed1 = stats[L,]                                       #list of individuals that passed first filter
-##of those-list the samples with more than 400,000 reads
-R = passed1$reads_raw >= 400000
-R
-passed2 = stats[R,]                                       #list of individuals that passed second filter
-#of those-list the samples with >70% expected loci
+##Now I need to put the three filters together, to see how many/which samples I am left with:
+##list the samples with less than 1750 loci (we don't need to rerun the good samples)
+L = stats$loci_in_assembly <= 1750 
+passed1 = stats[L,]                #list of individuals that passed first filter (basically a new dataframe)
 
+##of those-list the samples with more than 400,000 reads (don't want to rerun samples that won't even reach ~1,000,000 reads when doubled.)
+R = passed1$reads_raw >= 400000
+passed2 = passed1[R,]               #list of individuals that passed second filter
+
+#of those-list the samples with >70% expected loci (not worth rerunning, we won't get many more loci)
+E = passed2$reads_raw >= ?
+E
+passed3 = stats[R,]
+passed3                           #these are the candidates for the second library!
