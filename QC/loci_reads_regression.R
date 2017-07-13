@@ -1,5 +1,6 @@
 setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/')
-stats <- read.table("erisor_reps_stats.txt", header = TRUE, fill = TRUE)
+stats <- read.table("erisor_reps_stats-with_spp.txt", header = TRUE, fill = TRUE)
+str(stats)
 reads_raw <- stats[,2]
 loci_in_assembly <- stats[,9]
 
@@ -11,7 +12,7 @@ fit <- lm(reads_raw ~ loci_in_assembly, data=stats)   #linear regression
 summary(fit)
 plot(fit)
 
-##Which samples already have 1,750 loci? (exclude 52 samples)
+##How many samples already have 1,750 loci? (exclude 52 samples)
 lia <- loci_in_assembly[!is.na(loci_in_assembly)]
 count_lia <- function(nums){
   x=0
@@ -26,7 +27,7 @@ count_lia <- function(nums){
 }
 count_lia(lia) 
 
-##Which samples have less than 400,000 raw reads? (exclude 109 samples)
+##How many samples have less than 400,000 raw reads? (exclude 109 samples)
 rr <- reads_raw[!is.na(reads_raw)]
 count_rr <- function(nums){
   x=0
@@ -41,7 +42,7 @@ count_rr <- function(nums){
 }
 count_rr(rr)
 
-##Which samples have less than 70% expected loci?
+##How many samples have less than 70% expected loci?
 loci_per_read <- loci_in_assembly/reads_raw              #number of loci per read
 av_loci <- mean(loci_per_read, na.rm=TRUE)               #0.0021
 lpr <- loci_per_read[!is.na(loci_per_read)]            #to get rid of the Na that is messing up my funciton
@@ -53,7 +54,7 @@ count_ove <- function(nums){
   x=0
   for(i in nums){
     if(i < .70){
-      #print(i)
+      print(i)
       x=x+1
     }
   }
@@ -63,14 +64,13 @@ count_ove <- function(nums){
 count_ove(ove)                  #gives number of samples have less loci than expected
 
 ##Now I need to put the three of them together, to see how many samples I am left with:
-how_many_reads <- function(readsAndLoci){
-  x=0
-  for(row in readsAndLoci){
-    if(reads_raw[row]>=400000 & loci_in_assembly<2000){
-      x=x+1
-    }
-  }
-  return(x)
-}
-how_many_reads(stats)
-reads_and_loci
+##list the samples with less than 1750 loci
+L = stats$loci_in_assembly <= 1750
+L
+passed1 = stats[L,]                                       #list of individuals that passed first filter
+##of those-list the samples with more than 400,000 reads
+R = passed1$reads_raw >= 400000
+R
+passed2 = stats[R,]                                       #list of individuals that passed second filter
+#of those-list the samples with >70% expected loci
+
