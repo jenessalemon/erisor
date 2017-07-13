@@ -33,29 +33,16 @@ R = passed1$reads_raw >= 400000
 passed2 = passed1[R,]               #list of individuals that passed second filter
 
 #of those-list the samples with >70% expected loci (not worth rerunning, we won't get many more loci)
-E = passed2$reads_raw >= ?
-E
-passed3 = stats[R,]
-passed3                           #these are the candidates for the second library!
-
-###########################################################################################
-#add a column to passed2?
-step3 <- passed2[c(1,2,3)] = multiple columns
-
 #simple setup calculations
 samples <- row.names(passed2)          #get the samples
 loci <- passed2$loci_in_assembly       #get the loci counts
 reads <- passed2$reads_raw             #get the read counts
 loci_per_read <- loci/reads            #how many reads per loci?
-expected_loci <- reads*0.0021          #reads*average # of loci per read gives the expected # of reads
+expected_loci <- reads*0.0021          #reads*average # of loci per read gives the expected # of reads (mean was calculated earlier)
 observed_vs_expected <- loci/expected_loci                      #observed over expected
-ove <- observed_vs_expected[!is.na(observed_vs_expected)]       #get rid of the NA
+#now create the new dataframe and index it
+filter3 = data.frame(samples, observed_vs_expected)       #create a new dataframe with just the two that we need
+reruns = filter3$observed_vs_expected >= .70              #
+filter3[reruns,]$samples          #these are the candidates for the second library!
 
-step3 = data.frame(samples, ove)
-
-result = samples$ove >= .70
-
-
-
-
-
+###########################################################################################
