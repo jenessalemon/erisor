@@ -25,8 +25,8 @@ plot(fit)
 #Now I need to apply three filters, to see how many/which candidates for resequencing I am left with:
 
 ##list the samples with less than 1750 loci (we don't need to rerun the good samples)
-filter1 = stats$loci_in_assembly <= 1750 
-passed1 = stats[filter1,]                #list of individuals that passed first filter (basically a new dataframe)
+filter1 = stats$loci_in_assembly <= 1750    #apply filter
+passed1 = stats[filter1,]                   #list of individuals that passed first filter (basically a new dataframe)
 
 ##of those-list the samples with more than 400,000 reads (don't want to rerun samples that won't even reach ~1,000,000 reads when doubled.)
 filter2 = passed1$reads_raw >= 400000
@@ -46,8 +46,11 @@ reruns = passed2[filter3,]
 row.names(reruns)                       #these are the candidates for the second library!
 
 ############################# How many good samples does each population have? ##########################################
-G = stats$loci_in_assembly >= 1750 
-passed3 = stats[G,]
-S = passed3$reads_raw >= 800000
-passed4 = passed3[S,]
-good_reads = row.names(passed4)
+L = stats$loci_in_assembly >= 1000 #apply filter
+good_loci = stats[L,]              #list of just the samples with good loci
+R = good_loci$reads_raw >= 500000  #apply filter to the list of samples with good loci
+good_loci_and_reads = good_loci[R,]         #list of just the samples with good loci and reads
+good_samples = row.names(good_loci_and_reads)              #these are the good samples I have for my project
+nrow(good_loci_and_reads)
+
+#I want a function that 
