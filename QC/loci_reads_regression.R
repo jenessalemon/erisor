@@ -25,24 +25,29 @@ plot(fit)
 #Now I need to apply three filters, to see how many/which candidates for resequencing I am left with:
 
 ##list the samples with less than 1750 loci (we don't need to rerun the good samples)
-L = stats$loci_in_assembly <= 1750 
-passed1 = stats[L,]                #list of individuals that passed first filter (basically a new dataframe)
+filter1 = stats$loci_in_assembly <= 1750 
+passed1 = stats[filter1,]                #list of individuals that passed first filter (basically a new dataframe)
 
 ##of those-list the samples with more than 400,000 reads (don't want to rerun samples that won't even reach ~1,000,000 reads when doubled.)
-R = passed1$reads_raw >= 400000
-passed2 = passed1[R,]               #list of individuals that passed second filter
+filter2 = passed1$reads_raw >= 400000
+passed2 = passed1[filter2,]               #list of individuals that passed second filter
 
 #of those-list the samples with >70% expected loci (not worth rerunning, we won't get many more loci)
 #simple setup calculations
-samples <- row.names(passed2)          #get the samples
 loci <- passed2$loci_in_assembly       #get the loci counts
 reads <- passed2$reads_raw             #get the read counts
 loci_per_read <- loci/reads            #how many reads per loci?
 expected_loci <- reads*0.0021          #reads*average # of loci per read gives the expected # of reads (mean was calculated earlier)
 observed_vs_expected <- loci/expected_loci                      #observed over expected
-#now create the new dataframe and index it
-filter3 = data.frame(samples, observed_vs_expected)       #create a new dataframe with just the two that we need
-reruns = filter3$observed_vs_expected >= .70              #
-filter3[reruns,]$samples          #these are the candidates for the second library!
+#now add the observed vs expected column to the filter matrix, and filter it for the third and last time.
+passed2$obs_vs_exp<-observed_vs_expected
+filter3 = passed2$obs_vs_exp >= .70
+reruns = passed2[filter3,]
+row.names(reruns)                       #these are the candidates for the second library!
 
-###########################################################################################
+############################# How many good samples does each population have? ##########################################
+G = stats$loci_in_assembly >= 1750 
+passed3 = stats[G,]
+S = passed3$reads_raw >= 800000
+passed4 = passed3[S,]
+good_reads = row.names(passed4)
