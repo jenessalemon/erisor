@@ -53,4 +53,9 @@ good_loci_and_reads = good_loci[R,]         #list of just the samples with good 
 good_samples = row.names(good_loci_and_reads)              #these are the good samples I have for my project
 nrow(good_loci_and_reads)
 
-#I want a function that 
+#I want a function that will tell me how many good individuals I have from each population.
+sample_name_elements <- strsplit(row.names(good_loci_and_reads), "_")[1:nrow(good_loci_and_reads)]  #split the string
+inds_mat <- matrix(unlist(sample_name_elements), ncol=3, byrow=TRUE)                                #make it a matrix so you can index it
+pops <- inds_mat[,2]                            #second column of the new matrix is the population name (followed by an s but who cares)
+good_loci_and_reads$population <- pops          #add the new column
+good_loci_and_reads                             #print to make sure it worked. it did!
