@@ -22,15 +22,19 @@ summary(fit)
 plot(fit)
 
 ################################## Filtering #######################################
-#Now I need to apply three filters, to see how many/which candidates for resequencing I am left with:
+#Now I need to apply three (or 4) filters, to see how many/which candidates for resequencing I am left with:
 
 ##list the samples with less than 1750 loci (we don't need to rerun the good samples)
-filter1 = stats$loci_in_assembly <= 1750    #apply filter
+filter1 = stats$loci_in_assembly <= 1500    #apply filter
 passed1 = stats[filter1,]                   #list of individuals that passed first filter (basically a new dataframe)
 
+##list the samples with less than 800,000 reads (we don't need to rerun the good samples)
+filter1.5 = passed1$reads_raw <= 600000
+passed1.5 = passed1[filter1.5,]
+
 ##of those-list the samples with more than 400,000 reads (don't want to rerun samples that won't even reach ~1,000,000 reads when doubled.)
-filter2 = passed1$reads_raw >= 400000
-passed2 = passed1[filter2,]               #list of individuals that passed second filter
+filter2 = passed1.5$reads_raw >= 400000
+passed2 = passed1.5[filter2,]               #list of individuals that passed second filter
 
 #of those-list the samples with >70% expected loci (not worth rerunning, we won't get many more loci)
 #simple setup calculations
@@ -46,9 +50,9 @@ reruns = passed2[filter3,]
 row.names(reruns)                       #these are the candidates for the second library!
 
 ############################# How many good samples does each population have? ##########################################
-L = stats$loci_in_assembly >= 1000 #apply filter
+L = stats$loci_in_assembly >= 1500 #apply filter
 good_loci = stats[L,]              #list of just the samples with good loci
-R = good_loci$reads_raw >= 500000  #apply filter to the list of samples with good loci
+R = good_loci$reads_raw >= 600000  #apply filter to the list of samples with good loci
 good_loci_and_reads = good_loci[R,]         #list of just the samples with good loci and reads
 good_samples = row.names(good_loci_and_reads)              #these are the good samples I have for my project
 nrow(good_loci_and_reads)
