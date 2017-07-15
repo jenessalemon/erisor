@@ -21,15 +21,29 @@ fit <- lm(reads_raw ~ loci_in_assembly, data=stats)   #linear regression
 summary(fit)
 plot(fit)
 
+############################# How many good samples does each population have? ##########################################
+L = stats$loci_in_assembly >= 1500 #apply filter
+good_loci = stats[L,]              #list of just the samples with good loci
+R = good_loci$reads_raw >= 500000  #apply filter to the list of samples with good loci
+good_loci_and_reads = good_loci[R,]         #list of just the samples with good loci and reads
+good_samples = row.names(good_loci_and_reads)              #these are the good samples I have for my project
+nrow(good_loci_and_reads)
+
+#I want a function that will tell me how many good individuals I have from each population.
+sample_name_elements <- strsplit(row.names(good_loci_and_reads), "_")[1:nrow(good_loci_and_reads)]  #split the string
+inds_mat <- matrix(unlist(sample_name_elements), ncol=3, byrow=TRUE)                                #make it a matrix so you can index it
+pops <- inds_mat[,2]                            #second column of the new matrix is the population name (followed by an s but who cares)
+table(pops)                                     #thanks stack overflow
+
 ################################## Filtering #######################################
 #Now I need to apply three (or 4) filters, to see how many/which candidates for resequencing I am left with:
 
 ##list the samples with less than 1750 loci (we don't need to rerun the good samples)
-filter1 = stats$loci_in_assembly <= 1500    #apply filter
+filter1 = stats$loci_in_assembly <= 1750    #apply filter
 passed1 = stats[filter1,]                   #list of individuals that passed first filter (basically a new dataframe)
 
 ##list the samples with less than 800,000 reads (we don't need to rerun the good samples)
-filter1.5 = passed1$reads_raw <= 600000
+filter1.5 = passed1$reads_raw <= 800000
 passed1.5 = passed1[filter1.5,]
 
 ##of those-list the samples with more than 400,000 reads (don't want to rerun samples that won't even reach ~1,000,000 reads when doubled.)
@@ -47,18 +61,18 @@ observed_vs_expected <- loci/expected_loci                      #observed over e
 passed2$obs_vs_exp<-observed_vs_expected
 filter3 = passed2$obs_vs_exp >= .70
 reruns = passed2[filter3,]
-row.names(reruns)                       #these are the candidates for the second library!
-
-############################# How many good samples does each population have? ##########################################
-L = stats$loci_in_assembly >= 1500 #apply filter
-good_loci = stats[L,]              #list of just the samples with good loci
-R = good_loci$reads_raw >= 600000  #apply filter to the list of samples with good loci
-good_loci_and_reads = good_loci[R,]         #list of just the samples with good loci and reads
-good_samples = row.names(good_loci_and_reads)              #these are the good samples I have for my project
-nrow(good_loci_and_reads)
-
-#I want a function that will tell me how many good individuals I have from each population.
-sample_name_elements <- strsplit(row.names(good_loci_and_reads), "_")[1:nrow(good_loci_and_reads)]  #split the string
-inds_mat <- matrix(unlist(sample_name_elements), ncol=3, byrow=TRUE)                                #make it a matrix so you can index it
-pops <- inds_mat[,2]                            #second column of the new matrix is the population name (followed by an s but who cares)
-table(pops)                                     #thanks stack overflow
+rerun_names = row.names(reruns)                       #these are the candidates for the second library! But we must check for repeats with the good samples.
+#check for replicates with the good samples, and remove:
+exclusive <- function(candidates, good_samps){
+  i <- 2
+  for(i in candidates){
+    while (i<=length(candidates)){
+      if (i %in% good_samps) { 
+        candidates<-candidates[-i,]
+      }
+      i <- i+1
+    }
+  }
+  return(candidates)
+}
+exclusive(rerun_names, good_samples)
