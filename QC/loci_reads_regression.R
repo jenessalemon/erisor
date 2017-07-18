@@ -78,9 +78,10 @@ exclusive <- function(candidates, good_samps){
 }
 exclusive(rerun_names, good_samples)
 ################################## Plate districution of low reads ########################################
-B = stats$reads_raw <= 10000 #apply filter
+B = stats$reads_raw <= 10000 #10000 and lower
 low_reads = stats[B,]
 low_reads
+
 plate1 <- matrix(nrow = 8, ncol = 12)
 plate2 <- matrix(nrow = 8, ncol = 12)
 plate3 <- matrix(nrow = 8, ncol = 12)
@@ -104,6 +105,14 @@ plate3[8,11] <- "X"
 plate3[1,10] <- "X"
 plate1[8,5] <- "X"
 plate3[5,2] <- "X"
+plate3[4,6] <- "X"
+plate3[3,2] <- "X"
+plate3[7,2] <- "X"
+plate3[1,2] <- "X"
+plate3[7,6] <- "X"
+plate2[8,9] <- "X"
+plate3[8,8] <- "X"
+
 
 plate1
 plate2
