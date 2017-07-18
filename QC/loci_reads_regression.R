@@ -24,7 +24,7 @@ plot(fit)
 ############################# How many good samples does each population have? ##########################################
 L = stats$loci_in_assembly >= 1200 #apply filter
 good_loci = stats[L,]              #list of just the samples with good loci
-R = good_loci$reads_raw >= 500000  #apply filter to the list of samples with good loci
+R = good_loci$reads_raw >= 400000  #apply filter to the list of samples with good loci
 good_loci_and_reads = good_loci[R,]         #list of just the samples with good loci and reads
 good_samples = row.names(good_loci_and_reads)              #these are the good samples I have for my project
 nrow(good_loci_and_reads)
@@ -73,6 +73,38 @@ exclusive <- function(candidates, good_samps){
       i <- i+1
     }
   }
+  print("These are eligible reruns")
   return(candidates)
 }
 exclusive(rerun_names, good_samples)
+################################## Plate districution of low reads ########################################
+B = stats$reads_raw <= 10000 #apply filter
+low_reads = stats[B,]
+low_reads
+plate1 <- matrix(nrow = 8, ncol = 12)
+plate2 <- matrix(nrow = 8, ncol = 12)
+plate3 <- matrix(nrow = 8, ncol = 12)
+
+plate3[6,6] <- "X"
+plate3[4,3] <- "X"
+plate3[5,6] <- "X"
+plate1[1,4] <- "X"
+plate3[7,4] <- "X"
+plate3[3,6] <- "X"
+plate3[1,6] <- "X"
+plate1[7,12] <- "X"
+plate1[8,10] <- "X"
+plate3[2,1] <- "X"
+plate3[2,2] <- "X"
+plate3[8,7] <- "X"
+plate3[2,4] <- "X"
+plate3[6,2] <- "X"
+plate3[8,2] <- "X"
+plate3[8,11] <- "X"
+plate3[1,10] <- "X"
+plate1[8,5] <- "X"
+plate3[5,2] <- "X"
+
+plate1
+plate2
+plate3
