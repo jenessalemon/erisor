@@ -78,15 +78,15 @@ exclusive <- function(candidates, good_samps){
 }
 exclusive(rerun_names, good_samples)
 ################################## Plate districution of low reads ########################################
-B = stats$reads_raw <= 10000 #10000 and lower
+B = stats$reads_raw <= 40000 #create a new dataframe with only individuals 10000 and lower
 low_reads = stats[B,]
-low_reads
+low_reads             
 
-plate1 <- matrix(nrow = 8, ncol = 12)
+plate1 <- matrix(nrow = 8, ncol = 12)   #initialize 3 empty matrices resembling the plates
 plate2 <- matrix(nrow = 8, ncol = 12)
 plate3 <- matrix(nrow = 8, ncol = 12)
 
-plate3[6,6] <- "X"
+plate3[6,6] <- "X"   #Plot low coverage samples. I just did this by hand it didn't take long.
 plate3[4,3] <- "X"
 plate3[5,6] <- "X"
 plate1[1,4] <- "X"
@@ -116,4 +116,7 @@ plate3[8,8] <- "X"
 
 plate1
 plate2
-plate3
+plate3 
+
+reads = stats$reads_raw
+sum(reads)

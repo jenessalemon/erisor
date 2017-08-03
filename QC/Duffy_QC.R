@@ -6,9 +6,10 @@ library("pegas")
 library("seqinr")
 library("ggplot2")
 library("adegenet")
+install.packages("poppr")
 
 #Read in data
-obj1 <- read.structure("erisor_reps_9sout.str", n.ind = 262, n.loc = 4400, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
+obj1 <- read.structure("good_data.str", n.ind = 114, n.loc = 2066, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
 # It will prompt for info:
 #   genotypes = 244  (number of samples) This number can be found in the ipyrad _stats file, I had 266 but I threw out two samples with no data.
 #   markers = 1886 (number of loci) Also find in ipyrad _stats file.
@@ -51,7 +52,7 @@ find_relatives <-function(row){
     return(relatives)
 }
 #call the function with one row of the matrix (one individual).
-row1 <- M["p_023s_13",]                  #when looking for my replicates all I need to do is enter the sample name here and run to line 74.
+row1 <- M["p_026s_12",]                  #when looking for my replicates all I need to do is enter the sample name here and run to line 74.
 output <- find_relatives(row1)
 output
 
@@ -127,9 +128,7 @@ for(row in M){
     indices <- find_relatives(reps.list)
     index_to_samples(indices)
     
-    #Making a Tree
-    tre <- njs(D)
-    jpeg(height=960, width=960)
-    par(xpd=TRUE, mar=c(0,0,0,0))
-    plot(tre, type="phylogram", edge.w=1)
-    dev.off()
+#Nei's Distance
+nei <- nei.dist(obj1)
+aboot(nei)               #dendrogram using Nei's distance. passing in indices rather than sample names
+
