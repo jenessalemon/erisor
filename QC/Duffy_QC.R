@@ -6,7 +6,8 @@ library("pegas")
 library("seqinr")
 library("ggplot2")
 library("adegenet")
-install.packages("poppr")
+library("poppr")
+library("ggmap")
 
 #Read in data
 obj1 <- read.structure("good_data.str", n.ind = 114, n.loc = 2066, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
@@ -130,5 +131,5 @@ for(row in M){
     
 #Nei's Distance
 nei <- nei.dist(obj1)
-aboot(nei)               #dendrogram using Nei's distance. passing in indices rather than sample names
-
+aboot(nei)               #dendrogram using Nei's distance. Passing in indices rather than sample names
+#need to call sample names not indexes.
