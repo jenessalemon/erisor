@@ -1,4 +1,4 @@
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/') #remember to put the .str file there!
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/') #set path
 library("ggplot2")
 library("ggmap")
 
