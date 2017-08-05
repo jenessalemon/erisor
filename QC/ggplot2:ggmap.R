@@ -21,28 +21,14 @@ ggmap(map) +
   guides(col = gps$Population) #I think Aaron has written code for this, check it out!
 
 #Geographic distance matrix
-places_names <- c("Museum of Modern Art New York, NY",
-                  "Smithsonian Museum of American Art Washington, DC",
-                  "Brooklyn Museum Brooklyn, NY",
-                  "Walker Art Center Minneapolis, MN",
-                  "Fralin Museum of Art Charlottesville, VA")
-dist_list <- lapply(places_names, 
-                    function(z) 
-                      sapply(z, 
-                             function(x) 
-                               mapdist(from=places_names, to=x)$miles)
-)
-dist_list
-#BUT this is limited to 250 queries a day. Use Imap:
-
-
+#First, a simple example
 places_names <- c("Museum of Modern Art New York, NY",
                   "Smithsonian Museum of American Art Washington, DC",
                   "Brooklyn Museum Brooklyn, NY",
                   "Walker Art Center Minneapolis, MN",
                   "Fralin Museum of Art Charlottesville, VA")
 
-# geocode place names
+# geocode (grab location of) place names, add to a list.
 places_lat <- geocode(places_names, source="google")$lat
 places_lon <- geocode(places_names, source="google")$lon
 
@@ -51,8 +37,7 @@ places_df <- data.frame(names = places_names,
                         lat = places_lat,
                         lon = places_lon)
 
-# calculate geodesic distance with gdist() from Imap package
-
+## calculate geodesic distance with gdist() from Imap package:
 # create an empty list
 dist_list <- list()
 
@@ -69,3 +54,7 @@ for (i in 1:nrow(places_df)) {
 
 # view results as list
 dist_list
+#try to add color
+pop_names <- strsplit(row.names(gps), "_")[1:114]
+gps$Population <- as.factor(sapply(pop_names, function(x) x[[2]]))
+#can I just get population coordinate? Keeping track of 30 is a whole lot easier than 500.
