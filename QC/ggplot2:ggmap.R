@@ -2,8 +2,8 @@ setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/') #set pat
 library("ggplot2")
 library("ggmap")
 library("Imap")
-
 gps <- read.csv("gps_erisor.csv", header = TRUE)            #read in csv with population coordinates
+
 lat_up <- max(gps$Latitude)                                 #map boundaries
 lat_down <- min(gps$Latitude)
 long_left <- min(gps$Longitude)
@@ -15,10 +15,12 @@ map <- get_map(location = c(long_left, lat_down, long_right, lat_up),
                source = "google",
                maptype = "hybrid", #roadmap? hybrid? terrain
                zoom = 6)
-#Add points! Need to investigate coloring the dots. I've seen Aaron Duffy do it in a code somewhere.
 ggmap(map) +                                         
-  geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, fill = "red", alpha = 0.8), size = 2, shape = 21) +
-  guides(col = gps$Population) #I think Aaron has written code for this, check it out!
+  geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, 
+                             colour = gps$Region, 
+                             fill = gps$Region, 
+                             alpha = 0.8, 
+                             size = 2))
 
 #Geographic distance matrix
 #First, a simple example
@@ -55,6 +57,5 @@ for (i in 1:nrow(places_df)) {
 # view results as list
 dist_list
 #try to add color
-pop_names <- strsplit(row.names(gps), "_")[1:114]
-gps$Population <- as.factor(sapply(pop_names, function(x) x[[2]]))
+
 #can I just get population coordinate? Keeping track of 30 is a whole lot easier than 500.
