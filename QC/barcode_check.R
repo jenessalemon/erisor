@@ -32,14 +32,15 @@ diff_barcode_check <- function(well_list){
   gomp_layout <- read.csv("gompert_layout_p1.csv", header = TRUE, stringsAsFactors = FALSE)
   well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
   for(i in well_list){
-    samp <- well_sample[which(well_sample$Well==i),2]             #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = value at ith iteration in the list.
-    gomp_layout[which(gomp_layout$well==i),2] <- samp       #assign that variable (a barcode), to the (previously empty) cell in Barcode column of well_sample, on the row where that same variable is found.
+    samp <- well_sample[which(well_sample$Well==i),2]        #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = value at ith iteration in the list.
+    gomp_layout[which(gomp_layout$well==i),2] <- samp        #assign that variable (a barcode), to the (previously empty) cell in Barcode column of well_sample, on the row where that same variable is found.
   }
   return(gomp_layout)
 }
-diff_barcode_check(my_well_list)
-
-#Yeah, boom, done. Now I can run the other two plates, export, and run diff.
+product <- diff_barcode_check(my_well_list)                  #save output of the function to a variable
+product$well <- NULL                                         #drop the well column
+path <- '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/diff_barcodes' #probably not needed
+write_tsv(product, path = path)                              #tab delineated
 
 ######################### Practice that led to the function below ################################
 which(gomp_layout$Well=='B1')
