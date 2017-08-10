@@ -54,10 +54,11 @@ hi
 ##AN ATTEMPT WITHOUT LOOPING##
 which(gomp_layout$Well=='B1')
 #works
-bcode <- gomp_layout[which(well_sample$Well=='D1'),2]
-hello
-well_sample$Barcode[which(well_sample$Well=='D1')] <- bcode
-well_sample
+well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
+#re-read it in to start fresh
+bcode <- gomp_layout[which(gomp_layout$well=='D1'),2]             #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = "D1".
+well_sample$Barcode[which(well_sample$Well=='D1')] <- bcode       #assign that variable (a barcode), to the (previously empty) cell in well_sample$Barcode, on the row where that same variable is found.
+well_sample                                                       #check to see if it worked
 ## Works for one. Can I get it to go A1 through H12?
 
 
