@@ -49,5 +49,18 @@ for(i in 1:11){
 hi
 #works
 
-#what I can't do, is access the value behind the ith iteration 
+#what I can't do, is access the value behind the ith iteration
+
+##AN ATTEMPT WITHOUT LOOPING##
+which(gomp_layout$Well=='B1')
+#works
+bcode <- gomp_layout[which(well_sample$Well=='D1'),2]
+hello
+well_sample$Barcode[which(well_sample$Well=='D1')] <- bcode
+well_sample
+## Works for one. Can I get it to go A1 through H12?
+
+
+
+
   
