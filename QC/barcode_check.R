@@ -39,8 +39,7 @@ diff_barcode_check <- function(well_list){
 }
 diff_barcode_check(my_well_list)
 
-#Yeah, boom, done. Now I can run diff.
-
+#Yeah, boom, done. Now I can run the other two plates, export, and run diff.
 
 ######################### Practice that led to the function below ################################
 which(gomp_layout$Well=='B1')
