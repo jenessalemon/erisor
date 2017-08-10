@@ -5,67 +5,31 @@
 ## And gomp_layout which also has two columns, "well" and "barcode."
 
 setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/')
-gomp_layout <- read.csv("gompert_layout_p1.csv", header = TRUE, stringsAsFactors = FALSE)
-well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
-gomp_layout #has well and barcode FROM JUST ONE PLATE
-well_sample #has well and sample FROM JUST ONE PLATE
-A1B1C1 <- c(gomp_layout$well) #a list of wells from the gompert layout.
 
-diff_barcode_check <- function(well_list, gomp_layouts, well_samples){
+diff_barcode_check <- function(gomp_layouts, well_samples){
   gomp_layout <- read.csv(gomp_layouts, header = TRUE, stringsAsFactors = FALSE)
   well_sample <- read.csv(well_samples, header = TRUE, stringsAsFactors = FALSE)
-  A1B1C1 <- c(gomp_layout$well)
-  for(i in well_list){
+  A1A2A3 <- c(gomp_layout$well)
+  for(i in A1A2A3){
     samp <- well_sample[which(well_sample$Well==i),2]        #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = value at ith iteration in the list.
     gomp_layout[which(gomp_layout$well==i),2] <- samp        #assign that variable (a barcode), to the (previously empty) cell in Barcode column of well_sample, on the row where that same variable is found.
   }
+  #gomp_layout$well <- NULL                                   #drop the well column
   return(gomp_layout)
 }
-product <- diff_barcode_check(A1B1C1, "gompert_layout_p1", "well_samp_p1")                  #save output of the function to a variable
-product
-product$well <- NULL                                         #drop the well column
-path <- '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/diff_barcodes' #probably not needed
-write_tsv(product, path = path)                              #tab delineated
+
+#Now, let's run it on all three
+product1 <- diff_barcode_check("gompert_layout_p1.csv", "well_samp_p1.csv")                  #save output of the function to a variable
+product1
+write_tsv(product1, path = '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/Ripy_barcodes1')                              #tab delineated
+
+product2 <- diff_barcode_check("gompert_layout_p2.csv", "well_samp_p2.csv")                  #save output of the function to a variable
+product2
+write_tsv(product2, path = '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/Ripy_barcodes2')                              #tab delineated
+
+product3 <- diff_barcode_check("gompert_layout_p3.csv", "well_samp_p3.csv")                  #save output of the function to a variable
+product3
+write_tsv(product3, path = '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/Ripy_barcodes3')                              #tab delineated
 
 #Let's do all three:
-gomp_layout <- read.csv("gompert_layout_p1.csv", header = TRUE, stringsAsFactors = FALSE)
-gomp_layout <- read.csv("gompert_layout_p1.csv", header = TRUE, stringsAsFactors = FALSE)
-gomp_layout <- read.csv("gompert_layout_p1.csv", header = TRUE, stringsAsFactors = FALSE)
-well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
-well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
-well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
-######################### Practice that led to the function below ################################
-which(gomp_layout$Well=='B1')
-#works
-well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
-#re-read it in to start fresh
-bcode <- gomp_layout[which(gomp_layout$well=='D1'),2]             #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = "D1".
-well_sample$Barcode[which(well_sample$Well=='D1')] <- bcode       #assign that variable (a barcode), to the (previously empty) cell in well_sample$Barcode, on the row where that same variable is found.
-well_sample                                                       #check to see if it worked
-## Works for one. Can I get it to go A1 through H12? Can't see a way to do this wihout looping...
-#First, I will wrap into a function:
-barcode_check <- function(well){
-  well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
-  bcode <- gomp_layout[which(gomp_layout$well==well),2]             #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = "D1".
-  well_sample$Barcode[which(well_sample$Well==well)] <- bcode       #assign that variable (a barcode), to the (previously empty) cell in well_sample$Barcode, on the row where that same variable is found.
-  well_sample 
-  return(well_sample)
-}
-barcode_check("C1")
 
-bcodes_list <- c(gomp_layout$well)
-bcodes_list
-#now, back to looping
-barcode_check <- function(bcodes_list){
-  gomp_layout <- read.csv("gompert_layout_p1.csv", header = TRUE, stringsAsFactors = FALSE)
-  well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
-  for(i in bcodes_list){
-    bcode <- gomp_layout[which(gomp_layout$well==i),2]             #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = "D1".
-    well_sample[which(well_sample$Well==i),3] <- bcode       #assign that variable (a barcode), to the (previously empty) cell in well_sample$Barcode, on the row where that same variable is found.
-  }
-  return(well_sample)
-}
-barcode_check(bcodes_list)
-
-
-  
