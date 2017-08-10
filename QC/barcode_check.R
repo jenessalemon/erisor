@@ -9,6 +9,8 @@ for(i in well_sample$Well){
   for(j in gomp_layout$well){
     if (well_sample[i,1] == gomp_layout[j,1]){
       barcodes <- c(barcodes, gomp_layout$[j,2])
+      j = j+1
+      i = i+1
     }
   }
 }
