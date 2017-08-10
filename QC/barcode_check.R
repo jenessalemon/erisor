@@ -34,9 +34,8 @@ barcode_check <- function(bcodes_list){
   gomp_layout <- read.csv("gompert_layout_p1.csv", header = TRUE, stringsAsFactors = FALSE)
   well_sample <- read.csv("well_sample.csv", header = TRUE, stringsAsFactors = FALSE)
   for(i in bcodes_list){
-    bcode <- gomp_layout[which(gomp_layout$well==well),2]             #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = "D1".
-    well_sample$Barcode[which(well_sample$Well==well)] <- bcode       #assign that variable (a barcode), to the (previously empty) cell in well_sample$Barcode, on the row where that same variable is found.
-    well_sample 
+    bcode <- gomp_layout[which(gomp_layout$well==i),2]             #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = "D1".
+    well_sample[which(well_sample$Well==i),3] <- bcode       #assign that variable (a barcode), to the (previously empty) cell in well_sample$Barcode, on the row where that same variable is found.
   }
   return(well_sample)
 }
