@@ -35,41 +35,20 @@ c <- c("UTAH", "NEVADA", "IDAHO", "ARIZONA", "COLORADO", "WYOMING", "NEW MEXICO"
 map(database = "state")
 map(database = "state",regions = c,col = "blue",fill=T,add=TRUE)
 
-#
-
-map(database = "USA") + geom_path(mapping = NULL, data = d, stat = "identity",
-                                    position = "identity", lineend = "butt", linejoin = "round",
-                                    linemitre = 1, arrow = NULL, na.rm = FALSE, show.legend = NA,
-                                    inherit.aes = TRUE)
-#me
-gg2 <- map(database = "state")
-bounds <- data.frame(
-  long = c(-119.0975,-106.9835,-106.9835,-119.0975),
-  lat = c(43.89989,43.89989,34.18568,34.18568),
-  names = c("tl", "tr", "br", "bl"),
-  stringsAsFactors = FALSE
-)  
-
-gg2 + 
-  geom_point(data = bounds, aes(x = long, y = lat), color = "black", size = 5) +
-  geom_point(data = bounds, aes(x = long, y = lat), color = "yellow", size = 4)            
-
-#ex
+#map of region
 gg1 <- ggplot() + 
-  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = "violet", color = "blue") + 
+  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "black") + 
   coord_fixed(1.3)
-gg1
 
 labs <- data.frame(
   long = c(-119.0975,-106.9835,-106.9835,-119.0975),
   lat = c(43.89989,43.89989,34.18568,34.18568),
-  names = c("SWFSC-FED", "NWFSC"),
   stringsAsFactors = FALSE
 )  
 
 gg1 + 
-  geom_point(data = labs, aes(x = long, y = lat), color = "black", size = 5) +
-  geom_point(data = labs, aes(x = long, y = lat), color = "yellow", size = 4)
+  #geom_path(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "blue") + 
+  geom_polygon(data = labs, aes(x = long, y = lat), color = "blue", size = 1, fill = NA)
 
 
 
