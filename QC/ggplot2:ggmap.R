@@ -2,12 +2,13 @@ setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/') #set pat
 library("ggplot2")
 library("ggmap")
 library("Imap")
+library("maps")
 gps <- read.csv("gps_erisor.csv", header = TRUE)            #read in csv with population coordinates
 
-lat_up <- max(gps$Latitude)                                 #map boundaries
-lat_down <- min(gps$Latitude)
-long_left <- min(gps$Longitude)
-long_right <- max(gps$Longitude)
+lat_up <- max(gps$Latitude) +1                                 #map boundaries
+lat_down <- min(gps$Latitude) -1
+long_left <- min(gps$Longitude) -1
+long_right <- max(gps$Longitude) +1
 
 #Get blank map
 map <- get_map(location = c(long_left, lat_down, long_right, lat_up),
@@ -15,6 +16,13 @@ map <- get_map(location = c(long_left, lat_down, long_right, lat_up),
                source = "google",
                maptype = "hybrid", #roadmap? hybrid? terrain
                zoom = 6)
+
+ggmap(map) +                                         
+  geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, 
+                             colour = gps$Species,
+                             fill = gps$Species,
+                             size = 0.5, shape = 21)) + scale_shape_identity()
+
 ggmap(map) +                                         
   geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, 
                              colour = gps$Region, 
@@ -22,40 +30,46 @@ ggmap(map) +
                              alpha = 0.8, 
                              size = 2))
 
-#Geographic distance matrix
-#First, a simple example
-places_names <- c("Museum of Modern Art New York, NY",
-                  "Smithsonian Museum of American Art Washington, DC",
-                  "Brooklyn Museum Brooklyn, NY",
-                  "Walker Art Center Minneapolis, MN",
-                  "Fralin Museum of Art Charlottesville, VA")
+#map of regions
+c <- c("UTAH", "NEVADA", "IDAHO", "ARIZONA", "COLORADO", "WYOMING", "NEW MEXICO", "CALIFORNIA")
+map(database = "state")
+map(database = "state",regions = c,col = "blue",fill=T,add=TRUE)
 
-# geocode (grab location of) place names, add to a list.
-places_lat <- geocode(places_names, source="google")$lat
-places_lon <- geocode(places_names, source="google")$lon
+#
 
-# create a data frame to store all variables
-places_df <- data.frame(names = places_names,
-                        lat = places_lat,
-                        lon = places_lon)
+map(database = "USA") + geom_path(mapping = NULL, data = d, stat = "identity",
+                                    position = "identity", lineend = "butt", linejoin = "round",
+                                    linemitre = 1, arrow = NULL, na.rm = FALSE, show.legend = NA,
+                                    inherit.aes = TRUE)
+#me
+gg2 <- map(database = "state")
+bounds <- data.frame(
+  long = c(-119.0975,-106.9835,-106.9835,-119.0975),
+  lat = c(43.89989,43.89989,34.18568,34.18568),
+  names = c("tl", "tr", "br", "bl"),
+  stringsAsFactors = FALSE
+)  
 
-## calculate geodesic distance with gdist() from Imap package:
-# create an empty list
-dist_list <- list()
+gg2 + 
+  geom_point(data = bounds, aes(x = long, y = lat), color = "black", size = 5) +
+  geom_point(data = bounds, aes(x = long, y = lat), color = "yellow", size = 4)            
 
-# iterate through data frame placing calculated distance next to place place names
-for (i in 1:nrow(places_df)) {
-  
-  dist_list[[i]] <- gdist(lon.1 = places_df$lon[i], 
-                          lat.1 = places_df$lat[i], 
-                          lon.2 = places_df$lon, 
-                          lat.2 = places_df$lat, 
-                          units="miles")
-  
-}
+#ex
+gg1 <- ggplot() + 
+  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = "violet", color = "blue") + 
+  coord_fixed(1.3)
+gg1
 
-# view results as list
-dist_list
-#try to add color
+labs <- data.frame(
+  long = c(-119.0975,-106.9835,-106.9835,-119.0975),
+  lat = c(43.89989,43.89989,34.18568,34.18568),
+  names = c("SWFSC-FED", "NWFSC"),
+  stringsAsFactors = FALSE
+)  
 
-#can I just get population coordinate? Keeping track of 30 is a whole lot easier than 500.
+gg1 + 
+  geom_point(data = labs, aes(x = long, y = lat), color = "black", size = 5) +
+  geom_point(data = labs, aes(x = long, y = lat), color = "yellow", size = 4)
+
+
+
