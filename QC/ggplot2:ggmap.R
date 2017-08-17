@@ -3,6 +3,7 @@ library("ggplot2")
 library("ggmap")
 library("Imap")
 library("maps")
+library("mapdata")
 library("plyr")
 gps <- read.csv("gps_erisor.csv", header = TRUE)            #read in csv with population coordinates
 
@@ -13,23 +14,24 @@ long_right <- max(gps$Longitude) +1
 
 #Get blank map
 map <- get_map(location = c(long_left, lat_down, long_right, lat_up),
-               color = "color",
+               color = "bw",
                source = "google",
-               maptype = "hybrid", #roadmap? hybrid? terrain
+               maptype = "terrain", #roadmap? hybrid? terrain
                zoom = 6)
 #Plot points
 ggmap(map) +                                         
   geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, 
                              colour = gps$Species,
                              fill = gps$Species,
-                             size = 0.5, shape = 21)) + scale_shape_identity()
+                             size = 0.5, shape = 42)) + scale_shape_identity()
 
-
+######################################################################################################
 #Map for those unfamiliar with USA
+usa <- map_data("usa")
 gg1 <- ggplot() + 
   geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "black") +
   coord_fixed(1.3)
-gg1
+
 bounds <- data.frame(
   long = c(-119.0975,-106.9835,-106.9835,-119.0975),
   lat = c(43.89989,43.89989,34.18568,34.18568),
@@ -44,6 +46,41 @@ gg1 +
 c <- c("UTAH", "NEVADA", "IDAHO", "ARIZONA", "COLORADO", "WYOMING", "NEW MEXICO", "CALIFORNIA")
 map(database = "state")
 map(database = "state",regions = c,col = "blue",fill=T,add=TRUE)
+
+#######################################################################################################
+#San Francisco Mountain Range Enlarged
+lat_up <- max(gps$Latitude) +1                                 #map boundaries
+lat_down <- min(gps$Latitude) -1
+long_left <- min(gps$Longitude) -1
+long_right <- max(gps$Longitude) +1
+
+#Get blank map
+map <- get_map(location = c(long_left, lat_down, long_right, lat_up),
+               color = "bw",
+               source = "google",
+               maptype = "terrain", #roadmap? hybrid? terrain
+               zoom = 6)
+#Plot points
+ggmap(map) +                                         
+  geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, 
+                             colour = gps$Species,
+                             fill = gps$Species,
+                             size = 0.5, shape = 21)) + scale_shape_identity()
+
+########################################################################################
+#Another way
+usa <- map_data("usa")
+gg1 <- ggplot() + 
+  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "black") +
+  coord_fixed(1.3) + borders("state", colour = "black")
+
+gg1 + 
+  coord_fixed(xlim = c(-119, -107.0), ylim = c(34, 44), ratio = 1.3) +
+  geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, 
+                           colour = gps$Species,
+                           fill = gps$Species,
+                           size = 1, shape = 42)) + scale_shape_identity()
+
 
 
 
