@@ -49,23 +49,18 @@ map(database = "state",regions = c,col = "blue",fill=T,add=TRUE)
 
 #######################################################################################################
 #San Francisco Mountain Range Enlarged
-lat_up <- max(gps$Latitude) +1                                 #map boundaries
-lat_down <- min(gps$Latitude) -1
-long_left <- min(gps$Longitude) -1
-long_right <- max(gps$Longitude) +1
-
 #Get blank map
-map <- get_map(location = c(long_left, lat_down, long_right, lat_up),
-               color = "bw",
+map <- get_map(location = c(-113.7, 38.3, -113.1, 38.81),
+               color = "color",
                source = "google",
                maptype = "terrain", #roadmap? hybrid? terrain
-               zoom = 6)
+               zoom = 10)
 #Plot points
 ggmap(map) +                                         
   geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, 
                              colour = gps$Species,
                              fill = gps$Species,
-                             size = 0.5, shape = 21)) + scale_shape_identity()
+                             size = 0.5, shape = 20)) + scale_shape_identity()
 
 ########################################################################################
 #Another way
@@ -77,9 +72,12 @@ gg1 <- ggplot() +
 gg1 + 
   coord_fixed(xlim = c(-119, -107.0), ylim = c(34, 44), ratio = 1.3) +
   geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude, 
-                           colour = gps$Species,
-                           fill = gps$Species,
-                           size = 1, shape = 42)) + scale_shape_identity()
+                             colour = gps$Species,
+                             fill = gps$Species,
+                             size = 1, shape = 20)) + scale_shape_identity() +
+  geom_text(aes(x = gps$Longitude, y = gps$Latitude, 
+            label=gps$Population),
+            hjust=0, vjust=1)
 
 
 
