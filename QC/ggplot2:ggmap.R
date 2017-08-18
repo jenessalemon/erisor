@@ -76,9 +76,6 @@ gg1 +
                              fill = gps$Species,
                              size = 1, shape = 20)) + scale_shape_identity() +
   geom_text(aes(x = gps$Longitude, y = gps$Latitude, 
-            label=gps$Population),
+            label=gps$Population), #overlapping
             hjust=0, vjust=1)
-
-
-
 
