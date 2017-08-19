@@ -9,6 +9,7 @@ source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
 input.file =  "http://membres-timc.imag.fr/Olivier.Francois/secondary_contact.str"
 struct2geno(file = input.file, TESS = TRUE, diploid = TRUE, FORMAT = 2,
             extra.row = 0, extra.col = 0, output = "secondary_contact.geno")
+#might not need to convert .str to .geno...ipyrad provides .geno.
 
 #run pop structure analysis that assumes K=3
 library(LEA)
