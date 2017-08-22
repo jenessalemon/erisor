@@ -14,16 +14,17 @@ long_right <- max(gps$Longitude) +1
 
 #Get blank map
 map <- get_map(location = c(long_left, lat_down, long_right, lat_up),
-color = "bw",
-source = "google",
-maptype = "terrain", #roadmap? hybrid? terrain
-zoom = 6)
+          color = "color",
+          source = "google",
+          maptype = "terrain", #roadmap? hybrid? terrain
+          zoom = 6)
 #Plot points
 ggmap(map) +
-geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude,
-colour = gps$Species,
-fill = gps$Species,
-size = 0.5, shape = 42)) + scale_shape_identity()
+          geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude,
+          colour = gps$Species,
+          fill = gps$Species,
+          size = 0.5, shape = 21)) + scale_shape_identity() +
+          coord_cartesian(ylim = c(33, 45), xlim=c(-120, -105)) + annotation_raster(rainbow,ymin = 41,ymax= 45,xmin = -110,xmax = -105)
 
 ######################################################################################################
 #Map for those unfamiliar with USA
@@ -41,6 +42,38 @@ stringsAsFactors = FALSE
 gg1 +
 geom_polygon(data = bounds, aes(x = long, y = lat), color = "blue", size = 1, fill = NA) +
 borders("state", colour = "black")
+
+
+
+
+
+#inset
+plot( 1:10, 1:10, type="n")
+data( lennon)
+
+add.image( 5,4,lennon, col=grey( (0:256)/256))
+# reference lines 
+xline( 5, col=2)
+yline( 4,col=2) 
+
+#
+# add lennon right in the corner beyond the plotting region
+# 
+
+par(new=TRUE, plt=c(0,1,0,1), mar=c(0,0,0,0), usr=c(0,1,0,1))
+add.image( 0,0, lennon, adj.x=0, adj.y=0)
+
+# Generate data
+rainbow <- matrix(hcl(seq(0, 360, length.out = 50 * 50), 80, 70), nrow = 50)
+ggplot(mtcars, aes(mpg, wt)) +
+  geom_point() +
+  annotation_raster(rainbow, 15, 20, 3, 4)
+
+
+
+
+
+
 
 #map of states collected in
 c <- c("UTAH", "NEVADA", "IDAHO", "ARIZONA", "COLORADO", "WYOMING", "NEW MEXICO", "CALIFORNIA")
