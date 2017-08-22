@@ -1,22 +1,20 @@
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/')
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/downstream_analysis/')
 library(fields)
 library(RColorBrewer)
 library(mapplots)
-source("http://bioconductor.org/biocLite.R")
-biocLite("LEA")
-source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
-source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
-
-#download and convert my data:  (I want the .str file)
-erisor.input.file =  "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/good_data.str"
-struct2geno(file = input.file, TESS = FALSE, diploid = TRUE, FORMAT = 2,
-            extra.row = 0, extra.col = 1, output = "erisor_good.geno")  #may have more than one extra.col?
-#might not need to convert .str to .geno...ipyrad provides .geno.
-
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("LEA")
+#source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
+#source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
 
 #run pop structure analysis that assumes K=3
 library(LEA)
-obj.snmf = snmf("secondary_contact.geno", K = 3, alpha = 100, project = "new")
+obj.snmf = snmf("p1_good.geno", K = 3, alpha = 100, project = "new")
 qmatrix = Q(obj.snmf, K = 3)
 barplot(t(qmatrix), col = c("orange","violet","lightgreen"), border = NA, space = 0,
-        xlab = "Individuals", ylab = "Admixture coefficients")
+        xlab = "Individuals", ylab = "Admixture coefficients", main = "erisor plate 1")
+
+#What to choose for K?
+obj.snmf = snmf("p1_good.geno", K = 1:8,  ploidy = 2, entropy = T,
+                alpha = 100, project = "new")
+plot(obj.snmf, col = "blue4", cex = 1.4, pch = 19)
