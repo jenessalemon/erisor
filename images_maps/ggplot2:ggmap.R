@@ -52,7 +52,7 @@ borders("state", colour = "black")
 
 #######################################################################################################
 #San Francisco Mountain Range Enlarged
-#Get map for insert:
+#Get map for insert: (but I've decided not to insert it)
 gg1 <- ggplot() +
   geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "black") +
   coord_fixed(1.3) + borders("state", colour = "black")
@@ -92,14 +92,13 @@ ggmap(SFMRmap) +
   fill = gpsSFMR$Species,
   size = 0.5, shape = 20)) + scale_shape_identity() +
   geom_label_repel(aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude,
-                       label = gpsSFMR$Population)) +
-  coord_cartesian(ylim = c(38.35, 38.87), xlim=c(-113.77, -113)) +
-  annotation_raster(where_SFMR_is,ymin = 38.65,ymax= 38.9,xmin = -113.4,xmax = -113)
+                       label = gpsSFMR$Population))
 
 ########################################################################################
 #Another way
 usa <- map_data("usa")
 gps2 <- read.csv("gps_erisor.csv", header = TRUE)
+#get rid of the SFMR labels
 gps2[1,"Population"] <- NA
 gps2[2,"Population"] <- NA
 gps2[3,"Population"] <- NA
@@ -112,10 +111,18 @@ gps2[29,"Population"] <- NA
 gps2[31,"Population"] <- NA
 gps2[33,"Population"] <- NA
 gps2[34,"Population"] <- NA
-
+#define bounds for blue box to show the SFMR
+bounds_SFMR <- data.frame(
+  long = c(-113.9,-112.9,-112.9,-113.9),
+  lat = c(39,39,38.2,38.2),
+  stringsAsFactors = FALSE
+)
+#get blank map
 gg1 <- ggplot() +
-geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "black") +
-coord_fixed(1.3) + borders("state", colour = "black")
+  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "black") +
+  coord_fixed(1.3) + borders("state", colour = "black") +
+  geom_polygon(data = bounds_SFMR, aes(x = long, y = lat), color = "blue", size = 1, fill = NA) +
+    borders("state", colour = "black")
 
 gg1 +
   coord_fixed(xlim = c(-119, -107.0), ylim = c(34, 44), ratio = 1.3) +
