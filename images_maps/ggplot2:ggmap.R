@@ -66,14 +66,19 @@ SFMRmap <- get_map(location = c(-113.77, 38.35, -113, 38.87),
 
 #Plot points
 gpsSFMR <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FALSE)
+gpsSFMR <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FALSE)
+gpsSFMR[13, "Population"] <- "Sevier Lake"
+gpsSFMR[13, "Latitude"] <- 38.9
+gpsSFMR[13, "Longitude"] <- -113.1
+gpsSFMR
 
 ggmap(SFMRmap) +
   geom_point(data = gpsSFMR, aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude,
   colour = gpsSFMR$Species,
   fill = gpsSFMR$Species,
   size = 0.5, shape = 20)) + scale_shape_identity() +
-  geom_label_repel(aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude,
-                       label = gpsSFMR$Population))
+  geom_label_repel(aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude, label = gpsSFMR$Population),
+            data = gpsSFMR)
 
 ########################## GGPLOT2 attempt (main distribution map) ###########################################
 #read in data, assign usa
@@ -122,6 +127,4 @@ gg1 +
 
 ####################### Left to fix ################################
 # Need to move "010" label to be outside of the SFMR box. It's annoying.
-# Need to get labels on the SFMR map.
-
 
