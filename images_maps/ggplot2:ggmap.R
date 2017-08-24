@@ -70,6 +70,7 @@ gpsSFMR <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FAL
 gpsSFMR[13, "Population"] <- "Sevier Lake"
 gpsSFMR[13, "Latitude"] <- 38.9
 gpsSFMR[13, "Longitude"] <- -113.1
+gpsSFMR[13, "Species"] <- "Sevier Lake"   #I can remove this label, I was just messing around.
 gpsSFMR
 
 ggmap(SFMRmap) +
@@ -122,9 +123,9 @@ gg1 +
     size = 1, shape = 20)) + 
   scale_shape_identity() +
   geom_label_repel(aes(x = gps2$Longitude, y = gps2$Latitude,
-    label=gps2$Population)) +
-  annotation_raster(not_fam,ymin = 33.5,ymax= 36.2,xmin = -119,xmax = -113)
+    label=gps2$Population), nudge_x = -0.1) +
+  annotation_raster(not_fam,ymin = 33.5,ymax= 36.2,xmin = -119.55,xmax = -113.55)
 
 ####################### Left to fix ################################
-# Need to move "010" label to be outside of the SFMR box. It's annoying.
+
 
