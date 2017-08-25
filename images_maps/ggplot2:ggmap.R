@@ -16,12 +16,18 @@ lat_down <- min(gps$Latitude) -1
 long_left <- min(gps$Longitude) -1
 long_right <- max(gps$Longitude) +1
 
+#set boudnaries for SFMR box
+bounds_SFMR <- data.frame(
+  long = c(-113.9,-112.95,-112.95,-113.9),
+  lat = c(39,39,38.25,38.25),
+  stringsAsFactors = FALSE)
+
 #Get blank map
 map <- get_map(location = c(long_left, lat_down, long_right, lat_up),
           color = "color",
           source = "google",
           maptype = "terrain", #roadmap? hybrid? terrain
-          zoom = 6)
+          zoom = 6) + coord_fixed(1.3)
 
 #read in insert image
 not_familiar <- image_read(path = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/images_maps/not_familiar.png")
@@ -29,31 +35,33 @@ not_fam <- as.raster(not_familiar) #convert to raster
 
 #Plot points over the blank map previously created (map)
 ggmap(map) +
-          geom_point(data = gps, aes(x = gps$Longitude, y = gps$Latitude,
-            colour = gps$Species,
-            fill = gps$Species,
-            size = 0.5, shape = 21)) + scale_shape_identity() + 
+          geom_point(data = gps, x = gps$Longitude, y = gps$Latitude,
+            colour = "black",
+            size = 2, shape = 20) + scale_shape_identity() + 
+          geom_label_repel(aes(x = gps2$Longitude, y = gps2$Latitude, label = gps2$Population),
+                   data = gps2, nudge_x = -0.1) +
+          geom_polygon(data = bounds_SFMR, aes(x = long, y = lat), color = "black", size = 0.75, fill = NA) + 
           coord_cartesian(ylim = c(lat_down, lat_up), xlim=c(long_left, long_right)) +
-          annotation_raster(not_fam,ymin = lat_down,ymax= 37.2,xmin = long_left,xmax = -113)
+          annotation_raster(not_fam,ymin = 34,ymax= 36.8,xmin = long_left,xmax = -113.5)
+
 
 ############### Map for those unfamiliar with USA (ggpolot2) ###############################
 #get blank map
 usa <- map_data("usa")
   ggblank <- ggplot() +
-  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "black") +
+  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = "white", color = "black") +
   coord_fixed(1.3)
   
 #set bounds for the box enclosing the range
 bounds_notfamiliar <- data.frame(
 long = c(-119.0975,-106.9835,-106.9835,-119.0975),
 lat = c(43.89989,43.89989,34.18568,34.18568),
-stringsAsFactors = FALSE
-)
+stringsAsFactors = FALSE)
 
 #plot bounds over map
 ggblank +
 geom_polygon(data = bounds_notfamiliar, aes(x = long, y = lat), color = "blue", size = 1, fill = NA) +
-borders("state", colour = "black")
+borders("state", colour = "black") + theme_nothing()
 
 ########### San Francisco Mountain Range Enlarged (ggmap) #######################
 
@@ -66,25 +74,29 @@ SFMRmap <- get_map(location = c(-113.77, 38.35, -113, 38.87),
 
 #Plot points
 gpsSFMR <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FALSE)
-gpsSFMR <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FALSE)
-gpsSFMR[13, "Population"] <- "Sevier Lake"
-gpsSFMR[13, "Latitude"] <- 38.9
-gpsSFMR[13, "Longitude"] <- -113.1
-gpsSFMR[13, "Species"] <- "Sevier Lake"   #I can remove this label, I was just messing around.
-gpsSFMR
+gpslake <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FALSE)
+gpslake[13, "Population"] <- "Sevier Lake"
+gpslake[13, "Latitude"] <- 38.9
+gpslake[13, "Longitude"] <- -113.1
+gpslake[13, "Species"] <- "Sevier Lake"   #I can remove this label, I was just messing around.
+gpslake
 
 ggmap(SFMRmap) +
   geom_point(data = gpsSFMR, aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude,
   colour = gpsSFMR$Species,
   fill = gpsSFMR$Species,
   size = 0.5, shape = 20)) + scale_shape_identity() +
-  geom_label_repel(aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude, label = gpsSFMR$Population),
-            data = gpsSFMR)
+  geom_label_repel(aes(x = gpslake$Longitude, y = gpslake$Latitude, label = gpslake$Population),
+            data = gpslake)
 
 ########################## GGPLOT2 attempt (main distribution map) ###########################################
 #read in data, assign usa
 usa <- map_data("usa")
 gps2 <- read.csv("gps_erisor.csv", header = TRUE)
+
+#get insert image
+not_familiar <- image_read(path = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/images_maps/not_familiar.png")
+not_fam <- as.raster(not_familiar) #convert to raster
 
 #get rid of the SFMR labels
 gps2[1,"Population"] <- NA
@@ -109,22 +121,21 @@ bounds_SFMR <- data.frame(
 
 #get blank map
 gg1 <- ggplot() +
-  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = NA, color = "black") +
+  geom_polygon(data = usa, aes(x=long, y = lat, group = group), fill = "white", color = "black") +
   coord_fixed(1.3) + borders("state", colour = "black") +
-  geom_polygon(data = bounds_SFMR, aes(x = long, y = lat), color = "blue", size = 1, fill = NA) +
+  geom_polygon(data = bounds_SFMR, aes(x = long, y = lat), color = "grey", size = 1, fill = NA) +
     borders("state", colour = "black")
 
 #plot points, add repelled labels, add image for thoes unfamiliar in the corner
 gg1 +
-  coord_fixed(xlim = c(-119, -107.0), ylim = c(34, 44), ratio = 1.3) +
+  coord_fixed(xlim = c(-119.39, -107.0), ylim = c(34, 43), ratio = 1.3) +
   geom_point(data = gps, aes(x = gps2$Longitude, y = gps2$Latitude,
     colour = gps2$Species,
-    fill = gps2$Species,
-    size = 1, shape = 20)) + 
+    fill = gps2$Species), size = 3.5, shape = 20) + 
   scale_shape_identity() +
   geom_label_repel(aes(x = gps2$Longitude, y = gps2$Latitude,
-    label=gps2$Population), nudge_x = -0.1) +
-  annotation_raster(not_fam,ymin = 33.5,ymax= 36.2,xmin = -119.55,xmax = -113.55)
+    label=gps2$Population), nudge_x = -0.2) +
+  annotation_raster(not_fam,ymin = 33.4,ymax= 36.1,xmin = -120,xmax = -113.69)
 
 ####################### Left to fix ################################
 
