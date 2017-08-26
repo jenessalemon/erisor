@@ -7,6 +7,7 @@ library("mapdata")
 library("plyr")
 library("magick")
 library("ggrepel")
+library("ggsn")
 gps <- read.csv("gps_erisor.csv", header = TRUE)            #read in csv with population coordinates
 
 ###################### GGMAP attempt (main distribution map) #####################################
@@ -125,9 +126,10 @@ gg1 <- ggplot() +
   coord_fixed(1.3) + borders("state", colour = "black") +
   geom_polygon(data = bounds_SFMR, aes(x = long, y = lat), color = "grey", size = 1, fill = NA) +
     borders("state", colour = "black")
+  
 
 #plot points, add repelled labels, add image for thoes unfamiliar in the corner
-gg1 +
+erisor_dist <- gg1 +
   coord_fixed(xlim = c(-119.39, -107.0), ylim = c(34, 43), ratio = 1.3) +
   geom_point(data = gps, aes(x = gps2$Longitude, y = gps2$Latitude,
     colour = gps2$Species,
@@ -135,8 +137,58 @@ gg1 +
   scale_shape_identity() +
   geom_label_repel(aes(x = gps2$Longitude, y = gps2$Latitude,
     label=gps2$Population), nudge_x = -0.2) +
-  annotation_raster(not_fam,ymin = 33.4,ymax= 36.1,xmin = -120,xmax = -113.69)
+  annotation_raster(not_fam,ymin = 33.4,ymax= 36.1,xmin = -120,xmax = -113.69) 
+  
+erisor_dist + north2(erisor_dist, x = -109, y = 34, scale = .1, symbol = 1)
+
+  north2(gg1, x = -109, y = 34, scale = .1, symbol = 1)
+  
+  geom_rect(data=sb[[1]], aes(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, fill=z), inherit.aes=F,
+            show.legend = F,  color = "black", fill = sb[[1]]$fill.col) +
+  geom_text(data=sb[[2]], aes(x=xlab, y=ylab, label=text), inherit.aes=F, show.legend = F)
+  
+
+#scale bar
+  scalebar = function(x,y,w,n,d, units="km"){
+    # x,y = lower left coordinate of bar
+    # w = width of bar
+    # n = number of divisions on bar
+    # d = distance along each division
+    
+    bar = data.frame( 
+      xmin = seq(0.0, n*d, by=d) + x,
+      xmax = seq(0.0, n*d, by=d) + x + d,
+      ymin = y,
+      ymax = y+w,
+      z = rep(c(1,0),n)[1:(n+1)],
+      fill.col = rep(c("black","white"),n)[1:(n+1)])
+    
+    labs = data.frame(
+      xlab = c(seq(0.0, (n+1)*d, by=d) + x, x), 
+      ylab = c(rep(y-w*1.5, n+2), y-3*w),
+      text = c(as.character(seq(0.0, (n+1)*d, by=d)), units)
+    )
+    list(bar, labs)
+  }
+
+sb = scalebar(-110.5, 43, 0.1, 4, 50, units="km")
+  
+  
+  
+  
+  
+  
+  geom_segment(arrow=arrow(length=unit(3,"mm")), aes(x=-106,xend=-106,y=41,yend=41), 
+             colour="yellow") +
+  annotate(x=-106, y=41, label="N", colour="yellow", geom="text", size=4) +
+  geom_segment(arrow=arrow(length=unit(4,"mm"), type="closed", angle=40), 
+               aes(x=-106,xend=-106,y=41,yend=41), colour=hcl(240,50,80)) +
+  geom_label(aes(x=-106, y=41, label="N"),
+             size=3, label.padding=unit(1,"mm"), label.r=unit(0.4,"lines"))  
 
 ####################### Left to fix ################################
-
+#a border (maybe with lat long markers?)
+#a distance scale
+#a North arrow
+#some major cities?
 
