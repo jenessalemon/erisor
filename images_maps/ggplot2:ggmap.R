@@ -1,4 +1,4 @@
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/') #set path
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/images_maps/') #set path
 library("ggplot2")
 library("ggmap")
 library("Imap")
@@ -64,7 +64,7 @@ ggblank +
 geom_polygon(data = bounds_notfamiliar, aes(x = long, y = lat), color = "blue", size = 1, fill = NA) +
 borders("state", colour = "black") + theme_nothing()
 
-########### San Francisco Mountain Range Enlarged (ggmap) #######################
+################### San Francisco Mountain Range Enlarged (ggmap) #######################
 
 #Get blank map
 SFMRmap <- get_map(location = c(-113.77, 38.35, -113, 38.87),
@@ -73,7 +73,7 @@ SFMRmap <- get_map(location = c(-113.77, 38.35, -113, 38.87),
                maptype = "terrain", #roadmap? hybrid? terrain
                zoom = 10)
 
-#Plot points
+#Needed to plot points
 gpsSFMR <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FALSE)
 gpslake <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FALSE)
 gpslake[13, "Population"] <- "Sevier Lake"
@@ -82,13 +82,27 @@ gpslake[13, "Longitude"] <- -113.1
 gpslake[13, "Species"] <- "Sevier Lake"   #I can remove this label, I was just messing around.
 gpslake
 
+#Needed for scalebar:
+bb <- attr(SFMRmap, "bb")
+bb
+bb2 <- data.frame(long = unlist(bb[c(2, 4)]), lat = unlist(bb[c(1,3)]))
+
 ggmap(SFMRmap) +
   geom_point(data = gpsSFMR, aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude,
   colour = gpsSFMR$Species,
   fill = gpsSFMR$Species,
   size = 0.5, shape = 20)) + scale_shape_identity() +
   geom_label_repel(aes(x = gpslake$Longitude, y = gpslake$Latitude, label = gpslake$Population),
-            data = gpslake) 
+            data = gpslake) +
+  scalebar(data = bb2, dist = 10, dd2km = TRUE, model  = "WGS84", 
+           location = "topleft", 
+           anchor = c(
+             x = bb$ll.lon + 0.05 * (bb$ur.lon - bb$ll.lon), 
+             y = bb$ll.lat + 0.95 * (bb$ur.lat - bb$ll.lat)
+           )
+  )
+  #coord_fixed(ratio = 1:1) +       #in my opinion the N is redundant because the y axis is increasing in latitude.
+  #annotation_raster(north,ymin = 38.85,ymax= 38.94,xmin = -113.81,xmax = -113.7)
 
 ########################## GGPLOT2 attempt (main distribution map) ###########################################
 #read in data, assign usa
@@ -96,6 +110,10 @@ usa <- map_data("usa")
 gps2 <- read.csv("gps_erisor.csv", header = TRUE)
 
 #get insert image
+north_arrow <- image_read(path = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/images_maps/north-arrow-2.png")
+north <- as.raster(north_arrow) #convert to raster
+
+#get north symbol
 not_familiar <- image_read(path = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/images_maps/not_familiar.png")
 not_fam <- as.raster(not_familiar) #convert to raster
 
@@ -127,9 +145,10 @@ gg1 <- ggplot() +
   geom_polygon(data = bounds_SFMR, aes(x = long, y = lat), color = "grey", size = 1, fill = NA) +
     borders("state", colour = "black")
   
+#For scalebar
 
 #plot points, add repelled labels, add image for those unfamiliar in the corner
-erisor_distribution <- gg1 +
+gg1 +
   coord_fixed(xlim = c(-119.39, -107.0), ylim = c(34, 43), ratio = 1.3) +
   geom_point(data = gps, aes(x = gps2$Longitude, y = gps2$Latitude,
     colour = gps2$Species,
@@ -137,14 +156,30 @@ erisor_distribution <- gg1 +
   scale_shape_identity() +
   geom_label_repel(aes(x = gps2$Longitude, y = gps2$Latitude,
     label=gps2$Population), nudge_x = -0.2) +
-  annotation_raster(not_fam,ymin = 33.4,ymax= 36.1,xmin = -120,xmax = -113.69) 
-  scalebar(data = gps, location = "topright", dist = 50, st.dist = 0.2, 
-           st.bottom = TRUE, st.size = 5, ddkm = TRUE, model = "WGS84", anchor = NULL, 
-           facet.var = NULL, facet.lev = NULL)
+  annotation_raster(not_fam,ymin = 33.4,ymax= 36.1,xmin = -120,xmax = -113.69) +
+  annotation_raster(north,ymin = 42.15,ymax= 43.4,xmin = -120,xmax = -118.5) +
+  scalebar(data = usa, dist = 10, dd2km = TRUE, model  = "WGS84", 
+           location = "bottomright")
 
 ########################## Left to fix ################################
-#a border (maybe with lat long markers?)
-#a distance scale
-#a North arrow
+#a distance scale on ggplot distribution map
+#edit the legend? (both)
+#change color of the points to stand out? (both)
+#a North arrow (on ggmap if necessary)
+#a border (maybe with lat long markers?) I have this?
 #some major cities?
 http://egallic.fr/scale-bar-and-north-arrow-on-a-ggplot2-map/
+
+library("ggmap")
+library("ggsn")
+map <- get_googlemap(center =c(23.89, 52.74), zoom = 12, maptype = "hybrid")
+bb <- attr(map, "bb")
+bb2 <- data.frame(long = unlist(bb[c(2, 4)]), lat = unlist(bb[c(1,3)]))
+ggmap(map) + 
+  scalebar(data = bb2, dist = 50, dd2km = TRUE, model  = "WGS84", 
+           location = "topleft", 
+           anchor = c(
+             x = bb$ll.lon + 0.1 * (bb$ur.lon - bb$ll.lon), 
+             y = bb$ll.lat + 0.9 * (bb$ur.lat - bb$ll.lat)
+           )
+  )
