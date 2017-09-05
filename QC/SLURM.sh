@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --time=99:00:00          # walltime
 #SBATCH --nodes=1                # number of cluster nodes
-#SBATCH -o erisor-%j.out-%N	 # name of the stdout
-#SBATCH -e erisor-%j.err-%N	 # name of the stderr, using job and first node values
+#SBATCH -o z-%j.out-%N	 # name of the stdout
+#SBATCH -e z-%j.err-%N	 # name of the stderr, using job and first node values
 #SBATCH --ntasks=1               # number of MPI tasks
 # additional information for allocated clusters
 #SBATCH --partition=usubio-kp
@@ -18,7 +18,7 @@ cp -r $WORKDIR/* $SCRDIR/.             #transfer everyting in working to scratch
 cd $SCRDIR                             #go to scratch
 #
 # run the program
-/uufs/chpc.utah.edu/common/home/u6009817/miniconda2/bin/ipyrad -p params-good_data.txt -s 67
+/uufs/chpc.utah.edu/common/home/u6009817/miniconda2/bin/ipyrad -p params-51_individuals.txt -s 234567
 #
 # transfer output and remove scratch
 rsync -avzh ./ $WORKDIR
