@@ -1,12 +1,19 @@
+## The relevant _stats.txt file from ipyrad is the input file for this script.
+## In this script I plot reads vs. loci. I evaluate the linear regression. I apply
+## filters to the data and evaluate how many individuals from each population will
+## be retained if I cluster with these new filters. I decided on good traige parameter
+## settings int this script, and looked at the plate distribution of poor reads to
+## discover two rows of pipetting error.
+
 setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/')
-stats <- read.table("erisor_reps_stats-with_spp.txt", header = TRUE, fill = TRUE)
+stats <- read.table("p1_stats_now.txt", header = TRUE, fill = TRUE)
 str(stats)
 
 ################################## Plotting #######################################
 ##Simple plot before regression
 reads_and_loci <- subset(stats, select = c("reads_raw", "loci_in_assembly"))
 summary(reads_and_loci)
-plot(reads_and_loci)
+plot(reads_and_loci, main= "p1")
 #Plot with coloration by species and populations: first, get the population names from the sample names:
 sample_name_elements <- strsplit(row.names(stats), "_")[1:262]
 stats$population <- as.factor(sapply(sample_name_elements, function(x) x[[2]]))
@@ -21,10 +28,10 @@ fit <- lm(reads_raw ~ loci_in_assembly, data=stats)   #linear regression
 summary(fit)
 plot(fit)
 
-############################# How many good samples does each population have? ##########################################
-L = stats$loci_in_assembly >= 1200 #apply filter
+############## How many good samples does each population have? ##########################################
+L = stats$loci_in_assembly >= 230 #apply filter, was 200
 good_loci = stats[L,]              #list of just the samples with good loci
-R = good_loci$reads_raw >= 400000  #apply filter to the list of samples with good loci
+R = good_loci$reads_raw >= 400000  #apply filter to the list of samples with good loci was 350,000
 good_loci_and_reads = good_loci[R,]         #list of just the samples with good loci and reads
 good_samples = row.names(good_loci_and_reads)              #these are the good samples I have for my project
 nrow(good_loci_and_reads)
@@ -35,7 +42,7 @@ inds_mat <- matrix(unlist(sample_name_elements), ncol=3, byrow=TRUE)            
 pops <- inds_mat[,2]                            #second column of the new matrix is the population name (followed by an s but who cares)
 table(pops)                                     #thanks stack overflow
 
-############ Filtering to determine possible re-runs ############
+############ Filtering to determine strategic re-runs ############
 #Now I need to apply three (or 4) filters, to see how many/which candidates for resequencing I am left with:
 
 ##list the samples with less than 1750 loci (we don't need to rerun the good samples)
@@ -77,7 +84,7 @@ exclusive <- function(candidates, good_samps){
   return(candidates)
 }
 exclusive(rerun_names, good_samples)
-################################## Plate districution of low reads ########################################
+################################## Plate distribution of low reads ########################################
 B = stats$reads_raw <= 40000 #create a new dataframe with only individuals 10000 and lower
 low_reads = stats[B,]
 low_reads             
@@ -120,3 +127,8 @@ plate3
 
 reads = stats$reads_raw
 sum(reads)
+
+good_samps <- data.frame(good_samples)
+write_tsv(good_samps, path = '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/hi')
+
+
