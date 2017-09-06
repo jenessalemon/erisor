@@ -83,5 +83,10 @@ M
 str(M)
 
 ############################# Regression #####################################
+geo_dist_matrix    #geographic distance matrix
+M                  #genetic distance matrix
 
+#how do regress matrices?
+
+linear_model <- lm(geo_dist_matrix,M)
 
