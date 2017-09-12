@@ -39,9 +39,13 @@ M <- as(D, "matrix")               #Makes a normal matrix of the distance values
 M
 str(M)
 
+#Convert to dataframe:
+df <- as.data.frame(M)
+df
+
 #Indexing Distance Matrix (M)
 #All of the distance values for each individual are in each row, and each column, due to nature of the matrix.
-row1 <- M["p_001s_01",]
+row1 <- M["p_001s_02",]
 row1                                #row 1 has the distance values between p_001s_01 and every other sample in this library.
 str(row1)
 row1["p_001s_03"]                   #index by sample name
@@ -144,16 +148,16 @@ aboot(nei)               #dendrogram using Nei's distance. Passing in indices ra
 ############## Genetic Distance Matrix - Population Level ############################
 M            #this is the genetic distance matrix at the individual level.
              #I would like to get a genetic distance matrix at the population level.
-# Lets see if I can get all of the individuals from one population in one matrix.
-grep("p_001", x = M, value = TRUE)
-# Then I will need to make pairwise comparisons across all indiviudals in the matrix.
-# Then if I average the pairwise differences, I will have a population level genetic distance matrix.
+# First, I converted to a dataframe.
+df <- as.data.frame(M)
+df
+# I will need to make pairwise comparisons across all indiviudals in the matrix.
+# I would like to write a function that will do parwise comparisons for pop1 and pop2, pop1 and pop 3, etc.
 
-B = matrix( c(2, 4, 3, 1, 5, 7), nrow=3, ncol=2)
-B
-pop1 <- B %in% grep("3", B, value = TRUE)
-pop1
-
-M["p_006s_01","005s_11"] #if I had a list of the individuals from each population...I could maybe figure out a way to do a combination/permutation of values and generate a matrix.
+# Let's start small with a dummy dataframe:
+n = c(2, 3, 5) 
+s = c(3, 4, 1) 
+b = c(1, 2, 6) 
+df2 = data.frame(n, s, b)
 
 
