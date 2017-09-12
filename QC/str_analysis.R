@@ -4,7 +4,7 @@
 ## a different perspective. I generate a geographic distance matrix to perform a 
 ## regressiong against the genetic distance matrix and look for an association.
 
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/downstream_analysis/') #remember to put the .str file there!
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/') #remember to put the .str file there!
 #install.packages("genetics")
 library("ape")
 library("genetics")        #there is no package called ‘genetics’ = install.packages("genetics")
@@ -12,11 +12,11 @@ library("pegas")
 library("seqinr")
 library("ggplot2")
 library("adegenet")
-library("poppr")
-library("ggmap")
+#library("poppr")
+#library("ggmap")
 #SUBTRACT ONE FROM NUMBER OF LOCI
 #Read in data
-obj1 <- read.structure("p1.str", n.ind = 89, n.loc = 372, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
+obj1 <- read.structure("slane1_51_noNA.str", n.ind = 51, n.loc = 312, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
 # It will prompt for info:
 #   genotypes = 244  (number of samples) This number can be found in the ipyrad _stats file, I had 266 but I threw out two samples with no data.
 #   markers = 1886 (number of loci) Also find in ipyrad _stats file.
@@ -32,6 +32,7 @@ ploidy(obj1) # should return 2 since we gave it 2 alleles for each marker.
 #Neighbor joining euclidian distance tree
 D <- dist(tab(obj1))               #super hard to read, create a distance matrix!
 D                                  #0 means they are identical...and should be expected across the diagonal as each sample is identical to itself. 0s other than the diagonal better be replicates... Nas just mean that there are no loci in common between the two samples (we have no info ont their relatedness.)
+str(D)
 
 #Convert to matrix for indexing.
 M <- as(D, "matrix")               #Makes a normal matrix of the distance values.
@@ -139,3 +140,20 @@ for(row in M){
 nei <- nei.dist(obj1)
 aboot(nei)               #dendrogram using Nei's distance. Passing in indices rather than sample names
 #need to call sample names not indexes.
+
+############## Genetic Distance Matrix - Population Level ############################
+M            #this is the genetic distance matrix at the individual level.
+             #I would like to get a genetic distance matrix at the population level.
+# Lets see if I can get all of the individuals from one population in one matrix.
+grep("p_001", x = M, value = TRUE)
+# Then I will need to make pairwise comparisons across all indiviudals in the matrix.
+# Then if I average the pairwise differences, I will have a population level genetic distance matrix.
+
+B = matrix( c(2, 4, 3, 1, 5, 7), nrow=3, ncol=2)
+B
+pop1 <- B %in% grep("3", B, value = TRUE)
+pop1
+
+M["p_006s_01","005s_11"] #if I had a list of the individuals from each population...I could maybe figure out a way to do a combination/permutation of values and generate a matrix.
+
+
