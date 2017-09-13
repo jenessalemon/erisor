@@ -184,12 +184,14 @@ title("Isolation by distance plot")
 # With my data
 toto <- genind2genpop(obj1)
 Dgen <- dist.genpop(toto,method=2)
+
 # Need to read in the coordinates
 input="coord.txt"
 data=read.table(input,header=T)
 obj_Coord <- data
 obj_Coord
 #
+
 Dgeo <- dist(nancycats$other$xy)
 ibd <- mantel.randtest(Dgen,Dgeo)
 ibd
