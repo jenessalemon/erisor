@@ -145,7 +145,7 @@ nei <- nei.dist(obj1)
 aboot(nei)               #dendrogram using Nei's distance. Passing in indices rather than sample names
 #need to call sample names not indexes.
 
-############## Genetic Distance Matrix - Population Level ############################
+############## Genetic Distance Matrix - Population Level (INCOMPLETE) ############################
 M            #this is the genetic distance matrix at the individual level.
              #I would like to get a genetic distance matrix at the population level.
 # First, I converted to a dataframe.
@@ -160,4 +160,36 @@ s = c(3, 4, 1)
 b = c(1, 2, 6) 
 df2 = data.frame(n, s, b)
 
+############# Isolation by Distance #############################
+#Mantel Isolation by Distance Test
+data(nancycats)
+toto <- genind2genpop(nancycats)
+Dgen <- dist.genpop(toto,method=2)
+Dgeo <- dist(nancycats$other$xy)
+ibd <- mantel.randtest(Dgen,Dgeo)
+ibd
+# plotting
+plot(ibd)
+plot(Dgeo,Dgen)
+abline(lm(Dgen~Dgeo), col="red",lty=2)
+# heat map
+library(MASS)
+dens <- kde2d(Dgeo,Dgen, n=300)
+myPal <- colorRampPalette(c("white","blue","gold", "orange", "red"))
+plot(Dgeo, Dgen, pch=20,cex=.5)
+image(dens, col=transp(myPal(300),.7), add=TRUE)
+abline(lm(Dgen~Dgeo))
+title("Isolation by distance plot")
 
+# With my data
+toto <- genind2genpop(obj1)
+Dgen <- dist.genpop(toto,method=2)
+# Need to read in the coordinates
+input="coord.txt"
+data=read.table(input,header=T)
+obj_Coord <- data
+obj_Coord
+#
+Dgeo <- dist(nancycats$other$xy)
+ibd <- mantel.randtest(Dgen,Dgeo)
+ibd
