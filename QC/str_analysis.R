@@ -16,7 +16,7 @@ library("adegenet")
 #library("ggmap")
 #SUBTRACT ONE FROM NUMBER OF LOCI
 #Read in data
-obj1 <- read.structure("slane1_51_noNA.str", n.ind = 51, onerowperind= FALSE, n.loc = 312, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
+obj1 <- read.structure("shock_51_noNA.str", n.ind = 34, onerowperind= FALSE, n.loc = 6935, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0) #place cursor in console
 # It will prompt for info:
 #   genotypes = 244  (number of samples) This number can be found in the ipyrad _stats file, I had 266 but I threw out two samples with no data.
 #   markers = 1886 (number of loci) Also find in ipyrad _stats file.
@@ -220,7 +220,7 @@ GeoDistanceInMetresMatrix <- function(df.geopoints){
 }
 
 setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/') #remember to put the .str file there!
-geo <- read.csv("geo_for_slane51.csv", header = TRUE, sep=",")
+geo <- read.csv("geo_for_shock51.csv", header = TRUE, sep=",")
 geo.df <- data.frame(geo)
 geo_notdist <- round(GeoDistanceInMetresMatrix(geo.df) / 1000)
 Dgeo <- as.dist(geo_notdist) #convert to dist object
@@ -228,18 +228,18 @@ Dgeo <- as.dist(geo_notdist) #convert to dist object
 # Ok, now I can perform the mantel test
 isobd <- mantel.randtest(D,Dgeo)
 isobd
-# Result:
+# Result for shock_51:
 "Monte-Carlo test
 Call: mantel.randtest(m1 = D, m2 = Dgeo)
 
-Observation: 0.3800236 
+Observation: 0.5836126 
 
 Based on 999 replicates
 Simulated p-value: 0.001 
 Alternative hypothesis: greater 
 
-Std.Obs   Expectation      Variance 
-7.0425605426 -0.0002542095  0.0029156870"
+Std.Obs  Expectation     Variance 
+12.606791936 -0.001904555  0.002157099"
 # plotting
 plot(isobd)
 plot(Dgeo,D)
