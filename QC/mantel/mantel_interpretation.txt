@@ -1,0 +1,86 @@
+Mantel test results and interpretation:
+http://adegenet.r-forge.r-project.org/files/tutorial-basics.pdf
+
+##########################################################################################
+
+Plate 2 (DNA sequenced at Berkeley), 36 individuals of E. shockleyi.
+
+Monte-Carlo test
+Call: mantel.randtest(m1 = D2, m2 = Dgeo2)
+
+Observation: -0.06084527 
+
+Based on 999 replicates
+Simulated p-value: 0.903            
+Alternative hypothesis: greater 
+
+     Std.Obs  Expectation     Variance 
+-1.233485584  0.001339597  0.002541565 
+
+	Looking at the histogram (p2shockhist.PDF) the dot represents the actual correlation
+between my genetic and geographic distance matrices. The histogram represents simulated
+values (without the influence of spatial structure.) Because the dot falls well within
+the bounds of the histogram, isolation by distance is not clearly significant. In 
+addition, a p-value of .903 means that there is a 90.3% chance that I could get these 
+results based on chance alone. (That’s a pretty good chance!)
+	When analyzing these results it is important to remember that these data are, based 
+on the neighbor joining trees that they produce, highly inaccurate and random. I would NOT 
+assume that there is no IBD pattern seen in E. shockleyi because of this result. Rather,
+because of the quality of the data, the results are inconclusive. 
+
+##########################################################################################
+
+Plate 3 (DNA sequenced at Berkeley), 25 individuals of E. shockleyi.
+
+Monte-Carlo test
+Call: mantel.randtest(m1 = D3, m2 = Dgeo3)
+
+Observation: -0.1180307 
+
+Based on 999 replicates
+Simulated p-value: 0.905 
+Alternative hypothesis: greater 
+
+     Std.Obs  Expectation     Variance 
+-1.296882994  0.002050265  0.008573277
+
+	Looking at the histogram (p3shockhist.PDF) I’m not terribly surprised that it is similar
+to the result for plate 2 (as those library preparations were done on the same day, by me.)
+Again, because the dot falls well within the bounds of the histogram, isolation by distance
+is not clearly significant. A p-value of .905 means that there is a 90.5% chance that I 
+could get these results based on chance alone. As with the last section, these results are
+inconclusive based on the quality of the data for plate 3.
+
+###########################################################################################
+
+Plates 4 and 5 (DNA sequenced at Wisconsin), 89 individuals of E. shockleyi.
+
+Monte-Carlo test
+Call: mantel.randtest(m1 = D45, m2 = Dgeo45)
+
+Observation: 0.2217856 
+
+Based on 999 replicates
+Simulated p-value: 0.001 
+Alternative hypothesis: greater 
+
+     Std.Obs  Expectation     Variance 
+4.9419607956 0.0005367456 0.0020043043 
+
+	Looking at the histogram (p45shockhist.PDF) the dot (representing the correlation between
+the genetic and geographic distances) falls outside the bounds of the histogram (of 
+simulated values without the influence of spatial structure). This time I can see an 
+isolation by distance pattern. The p-value for this run was 0.001, meaning that there is
+a .1% chance that we would get this result based solely on chance. 
+	Since I suspect an IDB pattern, I move on to examine the heat map produced (p45shockheat.PDF),
+to determine whether the correlation is occurring due to a continuous cline of genetic
+differentiation, or distant patches. The heat map reveals two distinct patches. 
+This is interesting- I would expect this if I had E. shockleyi AND E. soredium in the mix,
+but these input files only have individuals of E. shockleyi. I’m not sure how to interpret
+the two groups, but if I had to guess, I would say that the two patches represent northern
+vs. southern regions of shockleyi. The plant differs (phenotypically) quite a bit across 
+it’s range, and the dry, light colored, crusty soil it is found growing on in the north is
+quite different from the red, sandy soil it is found on in the south. But at this point
+I’m just giving my best guess.
+
+##########################################################################################
