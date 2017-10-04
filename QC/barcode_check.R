@@ -14,7 +14,7 @@ diff_barcode_check <- function(gomp_layouts, well_samples){
     samp <- well_sample[which(well_sample$Well==i),2]        #bcode is a holder variable, which gets, from gompert_layout, the variable in the second column from the row where the well = value at ith iteration in the list.
     gomp_layout[which(gomp_layout$well==i),2] <- samp        #assign that variable (a barcode), to the (previously empty) cell in Barcode column of well_sample, on the row where that same variable is found.
   }
-  gomp_layout$well <- NULL                                   #drop the well column
+  #gomp_layout$well <- NULL                                   #drop the well column
   return(gomp_layout)
 }
 
