@@ -1,0 +1,34 @@
+Monte-Carlo test
+Call: mantel.randtest(m1 = D_177, m2 = Dgeo_177)
+
+Observation: 0.2815069 
+
+Based on 999 replicates
+Simulated p-value: 0.001 
+Alternative hypothesis: greater 
+
+    Std.Obs Expectation    Variance 
+7.738162596 0.001003086 0.001314019 
+
+Plates 1, 4 and 5, 177 individuals of E. shockleyi. (High quality samples.)
+
+Monte-Carlo test
+Call: mantel.randtest(m1 = D45, m2 = Dgeo45)
+
+Observation: 0.2217856 
+
+Based on 999 replicates
+Simulated p-value: 0.001 
+Alternative hypothesis: greater 
+
+     Std.Obs  Expectation     Variance 
+4.9419607956 0.0005367456 0.0020043043 
+
+	Looking at the histogram (177_shock_hist.PDF) the dot (representing the correlation between
+the genetic and geographic distances) falls outside the bounds of the histogram (of 
+simulated values without the influence of spatial structure). This time I can see an 
+isolation by distance pattern. The p-value for this run was 0.001, meaning that there is
+a .1% chance that we would get this result based solely on chance. 
+	Since I suspect an IDB pattern, I move on to examine the heat map produced (177_shock_heat.PDF),
+to determine whether the correlation is occurring due to a continuous cline of genetic
+differentiation, or distant patches. The heat map reveals two distinct patches. 

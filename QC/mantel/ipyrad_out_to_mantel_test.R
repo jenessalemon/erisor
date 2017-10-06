@@ -7,7 +7,7 @@
 #   -heat map
 
 ## 1. ##
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel') #remember to put the .str file there!
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel/str_files') #remember to put the .str file there!
 library("ape")
 library("genetics")    
 library("seqinr")
@@ -16,9 +16,12 @@ library("adegenet")
 #SUBTRACT ONE FROM NUMBER OF LOCI
 
 #read in data
-obj_example <- read.structure("example.str", n.ind = 25, onerowperind= FALSE, n.loc = 2190, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
+obj_177 <- read.structure("177_shock.str", n.ind = 121, onerowperind= FALSE, n.loc = 310, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
+indNames(obj_177) # I only get 247 because (24) low coverage individuals get filtered out.
+ploidy(obj_177) # should return 2 since we gave it 2 alleles for each marker.
+
 #get genetic distance matrix
-D <- dist(tab(obj_example))
+D_177 <- dist(tab(obj_177))
 
 ## 2 ##
 #geographic matrix function, obtained from https://eurekastatistics.com/calculating-a-distance-matrix-for-geographic-points-using-r/
@@ -71,40 +74,45 @@ GeoDistanceInMetresMatrix <- function(df.geopoints){
   return(mat.distances)
 }
 #get geographic distance matrix
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel/') #remember to put the .str file there!
-geo <- read.csv("example_geo.csv", header = TRUE, sep=",")
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel/str_analysis_geoinput') #remember to put the .str file there!
+geo <- read.csv("177shock", header = TRUE, sep=",") 
+geo
 geo.df <- data.frame(geo)
+geo.df
 geo_notdist <- round(GeoDistanceInMetresMatrix(geo.df) / 1000)
-Dgeo <- as.dist(geo_notdist)
+Dgeo_177 <- as.dist(geo_notdist)
 
 ## 3 ##
-isobd <- mantel.randtest(D,Dgeo)
+str(Dgeo_177)
+str(D_177)
+
+isobd <- mantel.randtest(D_177,Dgeo_177)
 isobd
 
 # Results will vary due to the simulation! But here's the results I got from this example:
 "Monte-Carlo test
-Call: mantel.randtest(m1 = D3, m2 = Dgeo3)
+Call: mantel.randtest(m1 = D, m2 = Dgeo)
 
-Observation: -0.1180307 
+Observation: 0.2815069 
 
 Based on 999 replicates
-Simulated p-value: 0.905 
+Simulated p-value: 0.001 
 Alternative hypothesis: greater 
 
-Std.Obs  Expectation     Variance 
--1.296882994  0.002050265  0.008573277"
+Std.Obs Expectation    Variance 
+7.842477573 0.000162180 0.001286977"
 
 # plotting
 plot(isobd)
-plot(Dgeo,D)
-abline(lm(D~Dgeo), col="red",lty=2)
+plot(Dgeo_177,D_177)
+abline(lm(D_177~Dgeo_177), col="red",lty=2)
 
 # heat map
 library(MASS)
-dens <- kde2d(Dgeo,D, n=300)
+dens <- kde2d(Dgeo_177,D_177, n=300)
 myPal <- colorRampPalette(c("white","blue","gold", "orange", "red"))
-plot(Dgeo, D2, pch=20,cex=.5)
+plot(Dgeo_177, D_177, pch=20,cex=.5)
 image(dens, col=transp(myPal(300),.7), add=TRUE)
-abline(lm(D~Dgeo))
+abline(lm(D_177~Dgeo_177))
 title("Isolation by distance plot")
 

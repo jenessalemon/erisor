@@ -21,4 +21,4 @@ coords_matrix <- function(order, coords){
 }
 heythere <- coords_matrix(order, coords)
 heythere
-write_tsv(heythere, path = '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel/str_analysis_geoinput/177shock')                              #tab delineated
+write_csv(heythere, path = '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel/str_analysis_geoinput/177shock')                              #tab delineated
