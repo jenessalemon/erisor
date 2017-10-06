@@ -1,7 +1,7 @@
 setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel/str_analysis_geoinput') #remember to put the .str file there!
-order <- read.csv("geo_shock177.csv", header = TRUE, stringsAsFactors = FALSE)
+order <- read.csv("geo_shock177.csv", header = TRUE, stringsAsFactors = FALSE) #this is a list of the individuals you want, with three columns: Sample, lon, lat.
 order$Sample
-coords <- read.csv("geo_for_mantel_names.csv", header = TRUE, stringsAsFactors = FALSE)
+coords <- read.csv("geo_for_mantel_names.csv", header = TRUE, stringsAsFactors = FALSE) #this will be the same every time
 coords
 
 coords_matrix <- function(order, coords){
@@ -21,4 +21,4 @@ coords_matrix <- function(order, coords){
 }
 heythere <- coords_matrix(order, coords)
 heythere
-write_csv(heythere, path = '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel/str_analysis_geoinput/177shock')                              #tab delineated
+write_csv(heythere, path = '/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/mantel/str_analysis_geoinput/177shock')    #obviously change the name
