@@ -67,11 +67,13 @@ borders("state", colour = "black") + theme_nothing()
 ################### San Francisco Mountain Range Enlarged (ggmap) #######################
 
 #Get blank map
-SFMRmap <- get_map(location = c(-113.77, 38.35, -113, 38.87),
+SFMRmap <- get_map(location = c(-113.6, 38.46, -113.3, 38.75),
                color = "color",
                source = "google",
                maptype = "terrain", #roadmap? hybrid? terrain
                zoom = 10)
+ggmap(SFMRmap)
+
 
 #Needed to plot points
 gpsSFMR <- read.csv("gps_erisor_SFMR.csv", header = TRUE, stringsAsFactors = FALSE)
@@ -87,20 +89,27 @@ bb <- attr(SFMRmap, "bb")
 bb
 bb2 <- data.frame(long = unlist(bb[c(2, 4)]), lat = unlist(bb[c(1,3)]))
 
-ggmap(SFMRmap) +
+hihi <- ggmap(SFMRmap) +
   geom_point(data = gpsSFMR, aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude,
-  colour = gpsSFMR$Species,
-  fill = gpsSFMR$Species,
-  size = 0.5, shape = 20)) + scale_shape_identity() +
-  geom_label_repel(aes(x = gpslake$Longitude, y = gpslake$Latitude, label = gpslake$Population),
-            data = gpslake) +
+            #colour = gpsSFMR$Species,
+            fill = gpsSFMR$Species,
+            size = 0.5, 
+            shape = gpsSFMR$Species), 
+            show.legend = TRUE) + 
+  scale_shape_identity() +
+  geom_label_repel(aes(x = gpslake$Longitude, y = gpslake$Latitude, label = gpslake$Population), data = gpslake) +
   scalebar(data = bb2, dist = 10, dd2km = TRUE, model  = "WGS84", 
            location = "topleft", 
            anchor = c(
-             x = bb$ll.lon + 0.05 * (bb$ur.lon - bb$ll.lon), 
+             x = bb$ll.lon + 0.08 * (bb$ur.lon - bb$ll.lon), 
              y = bb$ll.lat + 0.95 * (bb$ur.lat - bb$ll.lat)
-           )
+           ) 
   )
+
+hihi + scale_colour_discrete(name  ="Species",
+                            breaks=c("Female", "Male"),
+                            labels=c("Woman", "Man"))
+
   #coord_fixed(ratio = 1:1) +       #in my opinion the N is redundant because the y axis is increasing in latitude.
   #annotation_raster(north,ymin = 38.85,ymax= 38.94,xmin = -113.81,xmax = -113.7)
 
