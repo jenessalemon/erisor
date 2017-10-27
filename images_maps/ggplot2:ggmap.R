@@ -89,13 +89,15 @@ bb <- attr(SFMRmap, "bb")
 bb
 bb2 <- data.frame(long = unlist(bb[c(2, 4)]), lat = unlist(bb[c(1,3)]))
 
-hihi <- ggmap(SFMRmap) +
+mymap <- ggmap(SFMRmap) + 
   geom_point(data = gpsSFMR, aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude,
-            #colour = gpsSFMR$Species,
-            fill = gpsSFMR$Species,
             size = 0.5, 
-            shape = gpsSFMR$Species), 
-            show.legend = TRUE) + 
+            fill= gpsSFMR$Species,
+            shape = gpsSFMR$Species),
+            show.legend = TRUE) +
+  guides(color = FALSE, size = FALSE) +
+  theme(legend.title=element_blank(), + legend.text=element_text(size=5))  +
+  scale_shape_manual(values = c(18,111)) +
   scale_shape_identity() +
   geom_label_repel(aes(x = gpslake$Longitude, y = gpslake$Latitude, label = gpslake$Population), data = gpslake) +
   scalebar(data = bb2, dist = 10, dd2km = TRUE, model  = "WGS84", 
@@ -105,11 +107,8 @@ hihi <- ggmap(SFMRmap) +
              y = bb$ll.lat + 0.95 * (bb$ur.lat - bb$ll.lat)
            ) 
   )
-
-hihi + scale_colour_discrete(name  ="Species",
-                            breaks=c("Female", "Male"),
-                            labels=c("Woman", "Man"))
-
+print(mymap + scale_shape_manual(values = c(111,18)))
+#fill = guide_legend(title = "Species", override.aes = list(alpha = 1))
   #coord_fixed(ratio = 1:1) +       #in my opinion the N is redundant because the y axis is increasing in latitude.
   #annotation_raster(north,ymin = 38.85,ymax= 38.94,xmin = -113.81,xmax = -113.7)
 
