@@ -67,7 +67,7 @@ borders("state", colour = "black") + theme_nothing()
 ################### San Francisco Mountain Range Enlarged (ggmap) #######################
 
 #Get blank map
-SFMRmap <- get_map(location = c(-113.6, 38.46, -113.3, 38.75),
+SFMRmap <- get_map(location = c(-113.6, 38.55, -113.4, 38.7),
                color = "color",
                source = "google",
                maptype = "terrain", #roadmap? hybrid? terrain
@@ -91,15 +91,19 @@ bb2 <- data.frame(long = unlist(bb[c(2, 4)]), lat = unlist(bb[c(1,3)]))
 
 mymap <- ggmap(SFMRmap) + 
   geom_point(data = gpsSFMR, aes(x = gpsSFMR$Longitude, y = gpsSFMR$Latitude,
-            size = 0.5, 
+            size = 0.3, 
             fill= gpsSFMR$Species,
             shape = gpsSFMR$Species),
             show.legend = TRUE) +
   guides(color = FALSE, size = FALSE) +
-  theme(legend.title=element_blank(), + legend.text=element_text(size=5))  +
-  scale_shape_manual(values = c(18,111)) +
+  theme(legend.title=element_blank(), legend.text=element_text(size=10))  +
+  scale_shape_manual(values = c(18,20)) +
   scale_shape_identity() +
-  geom_label_repel(aes(x = gpslake$Longitude, y = gpslake$Latitude, label = gpslake$Population), data = gpslake) +
+  geom_label_repel(data = gpslake, aes(x = gpslake$Longitude, y = gpslake$Latitude, 
+          label = gpslake$Population), 
+          #nudge_x = 0.03,
+          #nudge_y = -0.04,
+          directions = directions) +
   scalebar(data = bb2, dist = 10, dd2km = TRUE, model  = "WGS84", 
            location = "topleft", 
            anchor = c(
@@ -107,7 +111,9 @@ mymap <- ggmap(SFMRmap) +
              y = bb$ll.lat + 0.95 * (bb$ur.lat - bb$ll.lat)
            ) 
   )
-print(mymap + scale_shape_manual(values = c(111,18)))
+
+print(mymap + scale_shape_manual(values = c(18,20)))
+
 #fill = guide_legend(title = "Species", override.aes = list(alpha = 1))
   #coord_fixed(ratio = 1:1) +       #in my opinion the N is redundant because the y axis is increasing in latitude.
   #annotation_raster(north,ymin = 38.85,ymax= 38.94,xmin = -113.81,xmax = -113.7)
@@ -117,7 +123,7 @@ print(mymap + scale_shape_manual(values = c(111,18)))
 usa <- map_data("usa")
 gps2 <- read.csv("gps_erisor.csv", header = TRUE)
 
-#get insert image
+#get north insert image
 north_arrow <- image_read(path = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/images_maps/north-arrow-2.png")
 north <- as.raster(north_arrow) #convert to raster
 
