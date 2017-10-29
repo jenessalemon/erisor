@@ -35,7 +35,8 @@ Q_threshold <- function(df, threshold){
   print("number of shockleyi passed the threshold:") 
   print(count_shock)
   print("shockleyi correctly determined:")
-  cat(count_shdsh, "or", count_shdsh/count_shock)
+  cat(count_shdsh, "or", count_shdsh/count_shock, "\n")
+  cat("\n")
 }
 
 ##########################################################################
@@ -49,7 +50,6 @@ Q2 <- read.csv("Q_matrix_GHandE_removed.csv", header = TRUE, sep=",")
 #Call with .90 and .95 as threshold, with and without GH/GHE.
 Q_threshold(Q, .89999)
 Q_threshold(Q, .94444)
-
 Q_threshold(Q2, .89999)
 Q_threshold(Q2, .94444)
 
