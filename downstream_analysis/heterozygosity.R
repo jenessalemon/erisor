@@ -36,40 +36,30 @@ ploidy(obj_155) # should return 2 since we gave it 2 alleles for each marker.
 #Need to build a dataframe with individuals as rows, loci as columns and status as the values.
 df <- as.data.frame((obj_155))
 df$L001.01
-test <- as.data.frame(tab((obj_155)))
-test
-
-(obj_155)$L001.01
-obj_155$loc.fac
-
-for(i in 1:nrow(df)){
-  
-table(df)
-  
-  
-#Need to get hetero/(hetero + homo)
+ 
+#Need to get hetero/(hetero + homo) for each individual
 heterozygotes <- function(df_genind){
   print("Percentage of Heterozygous loci:")
-  for(row in df_genind){
-    count1 <- 0
+  for(row in df_genind){      #for each individual
+    count1 <- 0               #set the counts to 1
     count2 <- 0
     for(i in row){            #for each allele at each locus
-      if(is.na(i)){
+      if(is.na(i)){           #set NAs to 9
         i <- 9
       }
-      if(i == 1){
+      if(i == 1){             #count the heterozygous alleles
         count1 <- count1 + 1
       }
-      if(i == 2){
+      if(i == 2){            #count the homozygous alleles
         count2 <- count2 + 1
       }
-    }
       #print("Number of Heterozygous loci:")
       #print(count1)
       #print("Number of Homozygous loci:")
       #print(count2)
-      print(rownames(df_genind)[row])
-      print(count1/(count1 + count2))
+      #print(rownames(df_genind)[row])
+      print(count1/(count1 + count2)) #calculate heterozygosity
+    }
   }
 }
 heterozygotes(df)
