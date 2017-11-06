@@ -10,17 +10,17 @@ Q_threshold <- function(df, threshold){
   count_sored <- 0
   count_shock <- 0
   for(i in 1:nrow(df)){
-    if(df[i,2] > threshold){
+    if(df[i,2] > threshold){                          #if the Q matrix value for soredium is above the threshold...
       count_sored <- count_sored + 1
     }
     if(df[i,2] > threshold & df[i,5] == "soredium"){  #if str says that this individual is soredium, and I specified that it is, call it soredium.
       count_sodso <- count_sodso + 1
       spec[i] <- "soredium"
     }
-    if(df[i,2] < 1-threshold){
+    if(df[i,3] > threshold){                           #if the Q matrix value for shockleyi is above the threshold...
       count_shock <- count_shock + 1
     }
-    if(df[i,2] < 1-threshold & df[i,5] == "shockleyi"){
+    if(df[i,3] > threshold & df[i,5] == "shockleyi"){  #if str says that this individual is shockleyi, and I specified that it is, call it shockleyi.
       count_shdsh <- count_shdsh +1
     }
   }
@@ -29,12 +29,12 @@ Q_threshold <- function(df, threshold){
   cat("\n")
   print("number of soredium passed the threshold:")
   print(count_sored)
-  print("soredium correctly determined:")
+  print("soredium that passed the threshold AND were correctly determined:")
   cat(count_sodso, "or", count_sodso/count_sored, "\n")
   cat("\n")
   print("number of shockleyi passed the threshold:") 
   print(count_shock)
-  print("shockleyi correctly determined:")
+  print("shockleyi that passed the threshold AND were correctly determined:")
   cat(count_shdsh, "or", count_shdsh/count_shock, "\n")
   cat("\n")
 }
