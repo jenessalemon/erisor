@@ -54,13 +54,13 @@ myrow
 #Need to get hetero/(hetero + homo) for each individual
 heterozygotes <- function(df_genind){
   print("Percentage of Heterozygous loci:")
-  df_genind[is.na(df_genind)] <- 9                     #convert NAs to 9s
+  df_genind[is.na(df_genind)] <- 9                       #convert NAs to 9s
   heterozygosities <- c()
-  for(row in 1:nrow(df_genind)){                               #for each individual
-    row <- df_genind[row,]
+  for(j in 1:nrow(df_genind)){                           #for each individual
+    row <- df_genind[j,]                             #set row = to the ith row of the dataframe
     count1 <- 0                                        #set the counts to 1
     count2 <- 0
-      for(i in 1:length(row)){
+      for(i in row){
         if(i == 1){                                      #count the heterozygous alleles
           count1 <- count1 + 1
         }
@@ -71,9 +71,10 @@ heterozygotes <- function(df_genind){
     hetero_loci <- count1/2
     homo_loci <- count2
     ind <- hetero_loci/(hetero_loci + homo_loci)
-    heterozygosities <- c(heterozygosities, ind)
+    heterozygosities[j] <- ind
     #print(rownames(df_genind)[row])
   }
+  j <- j+1
   return(heterozygosities)
 }
 heterozygotes(df)
