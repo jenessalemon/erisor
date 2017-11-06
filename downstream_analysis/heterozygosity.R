@@ -35,32 +35,46 @@ indNames(obj_155) # I only get 247 because (24) low coverage individuals get fil
 ploidy(obj_155) # should return 2 since we gave it 2 alleles for each marker.
 #Need to build a dataframe with individuals as rows, loci as columns and status as the values.
 df <- as.data.frame((obj_155))
-df$L001.01
- 
+myrow <- df[1,]
+count1 <- 0
+count2 <- 0
+myrow[is.na(myrow)] <- 9
+for(i in myrow){            #for each allele at each locus
+  if(i == 1){             #count the heterozygous alleles
+    count1 <- count1 + 1
+  }
+  if(i == 2){            #count the homozygous alleles
+    count2 <- count2 + 1
+  }
+}
+length(count1)
+count2
+myrow
+
 #Need to get hetero/(hetero + homo) for each individual
 heterozygotes <- function(df_genind){
   print("Percentage of Heterozygous loci:")
-  for(row in df_genind){      #for each individual
-    count1 <- 0               #set the counts to 1
+  df_genind[is.na(df_genind)] <- 9                     #convert NAs to 9s
+  heterozygosities <- c()
+  for(row in 1:nrow(df_genind)){                               #for each individual
+    row <- df_genind[row,]
+    count1 <- 0                                        #set the counts to 1
     count2 <- 0
-    for(i in row){            #for each allele at each locus
-      if(is.na(i)){           #set NAs to 9
-        i <- 9
+      for(i in 1:length(row)){
+        if(i == 1){                                      #count the heterozygous alleles
+          count1 <- count1 + 1
+        }
+        if(i == 2){                                      #count the homozygous alleles
+          count2 <- count2 + 1
+        }
       }
-      if(i == 1){             #count the heterozygous alleles
-        count1 <- count1 + 1
-      }
-      if(i == 2){            #count the homozygous alleles
-        count2 <- count2 + 1
-      }
-      #print("Number of Heterozygous loci:")
-      #print(count1)
-      #print("Number of Homozygous loci:")
-      #print(count2)
-      #print(rownames(df_genind)[row])
-      print(count1/(count1 + count2)) #calculate heterozygosity
-    }
+    hetero_loci <- count1/2
+    homo_loci <- count2
+    ind <- hetero_loci/(hetero_loci + homo_loci)
+    heterozygosities <- c(heterozygosities, ind)
+    #print(rownames(df_genind)[row])
   }
+  return(heterozygosities)
 }
 heterozygotes(df)
 
