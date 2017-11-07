@@ -4,9 +4,9 @@
 
 ## Part one- graphing heterozygosity from the ipyrad outfiles.
 setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/downstream_analysis/')
-sored_stats <- read.table("soredium_c177_stats.txt", header = TRUE, fill = TRUE)
+sored_stats <- read.table("c155_sored_stats.txt", header = TRUE, fill = TRUE)
 sored_stats
-shock_stats <- read.table("shockleyi_c177_stats.txt", header = TRUE, fill = TRUE)
+shock_stats <- read.table("c155_shock_stats.txt", header = TRUE, fill = TRUE)
 shock_stats
 both_stats <- read.table("combined_177_stats.txt", header = TRUE, fill = TRUE)
 both_stats
@@ -18,7 +18,6 @@ both_hetero <- both_stats$hetero_est
 mean(sored_hetero)
 mean(shock_hetero)
 mean(both_hetero)
-
 
 hist(shock_hetero, breaks = 20, col = "blue", main = "shockleyi blue, soredium overlaid in pink", xlab = "Heterozygosity")
 hist(sored_hetero, breaks = 20, col=rgb(1,0,0,0.5), add=T)
@@ -34,7 +33,7 @@ library("ggplot2")
 library("adegenet")
 #SUBTRACT ONE FROM NUMBER OF LOCI
 #read in data
-obj_155 <- read.structure("c155_shock.str", n.ind = 118, onerowperind= FALSE, n.loc = 330, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
+obj_155 <- read.structure("c155_shock.str", n.ind = 118, onerowperind= FALSE, n.loc = 336, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
 indNames(obj_155) 
 ploidy(obj_155) # should return 2 since we gave it 2 alleles for each marker.
 obj_155_soredium <- read.structure("c155_sored.str", n.ind = 37, onerowperind= FALSE, n.loc = 941, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
@@ -74,9 +73,11 @@ heterozygotes <- function(df_genind){
 #Call on shockleyi and soredium
 shock_heterozygosity <- heterozygotes(df)
 shock_heterozygosity
+mean(shock_heterozygosity)
 
 sored_heterozygosity <- heterozygotes(df_soredium)
 sored_heterozygosity
+mean(sored_heterozygosity)
 
 hist(shock_heterozygosity, breaks = 20, col = "blue", ylab = "Frequency of Individuals", main = "shockleyi blue, soredium overlaid in pink, purple is the overlap", xlab = "Heterozygosity", xlim = c(0,0.13))
 hist(sored_heterozygosity, breaks = 20, col=rgb(1,0,0,0.5), add=T)
