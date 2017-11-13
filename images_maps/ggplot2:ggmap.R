@@ -25,7 +25,7 @@ stringsAsFactors = FALSE)
 
 #plot bounds over map
 ggblank +
-geom_polygon(data = bounds_notfamiliar, aes(x = long, y = lat), color = "#0072B2", size = 1, fill = NA) +
+geom_polygon(data = bounds_notfamiliar, aes(x = long, y = lat), color = "grey", size = 1, fill = NA) +
 borders("state", colour = "black") + theme_nothing()
 
 ################### San Francisco Mountain Range Enlarged (ggmap) #######################
@@ -89,7 +89,7 @@ north_arrow <- image_read(path = "/Users/jimblotter/Desktop/Grad_School/Data_Ana
 north <- as.raster(north_arrow) #convert to raster
 
 #get not familiar
-not_familiar <- image_read(path = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/images_maps/not_familiar.png")
+not_familiar <- image_read(path = "/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/images_maps/box_black.png")
 not_fam <- as.raster(not_familiar) #convert to raster
 
 #get rid of the SFMR labels
@@ -127,12 +127,12 @@ gg1 +
     colour = gps2$Species,
     fill = gps2$Species), size = 3.5, shape = 20) + 
   #scale_color_manual(values = wes_palette("FantasticFox", 3, type = "discrete")) +
-  scale_color_manual(values = c("#FF7F50", "#66CDAA", "#E69F00")) +
+  scale_color_manual(values = c("#66CDAA", "#66CDAA", "#FF7F50")) +
   scale_shape_identity() +
   geom_label_repel(aes(x = gps2$Longitude, y = gps2$Latitude,
     label=gps2$Population), nudge_x = -0.2) +
   annotation_raster(north,ymin = 42.15,ymax= 43.4,xmin = -119.95,xmax = -118.5) +
-  annotation_raster(not_fam,ymin = 33.4,ymax= 36.1,xmin = -120,xmax = -113.69) +
+  annotation_raster(not_fam,ymin = 33.9,ymax= 36.1,xmin = -120,xmax = -114.19) +
   scalebar(data = usa, dist = 10, dd2km = TRUE, model  = "WGS84", 
            location = "bottomright") +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=1.5)) +
