@@ -1,0 +1,28 @@
+iPyRAD commands: Data were run at two separate facilities. Identical barcodes were used
+in the library preparations, so libraries must be demultiplexed separately.
+
+# Create 2 new assemblies:
+ipyrad -n erisor1
+ipyrad -n erisor2          
+
+# After editing "params-erisor1.txt" and "params-erisor2.txt" run the first step (demultiplex):
+ipyrad -p params-erisor1.txt -s 1
+ipyrad -p params-erisor2.txt -s 1
+
+# Merge the two assemblies.
+ipyrad -m erisor params-erisor1.txt params-erisor2.txt
+
+# Edit params-erisor1.txt
+# Finish the remaining data assembly steps with the merged data.
+ipyrad -p params-erisor.txt -s 234567
+
+# To branch E. shockleyi into a separate assembly:
+ipyrad -p params-erisor.txt -b shockleyi shockleyi_samples.txt
+
+# After editing params-shockleyi.txt, run the branch:
+ipyrad -p params-shockleyi.txt -s 234567
+
+
+
+
+
