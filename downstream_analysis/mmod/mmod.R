@@ -24,7 +24,7 @@ D_Jost(obj)
 ## To check whether or not missing data was the problem, I created a subet
 ## only including loci that I could see have data. I got the same results as
 ## above.
-subet <- obj[loc = 22:100]        #random subset that I can see have data
+sub <- obj[loc = 22:100]        #random subset that I can see have data
 diff_stats(sub)  
 pairwise_D(sub, linearized = FALSE, hsht_mean = "arithmetic")
 D_Jost(sub)
