@@ -21,7 +21,7 @@ D_Jost(obj)
 ## and the same warning message.
 
 ##Attempt at manual calculation:
-## [(Ht - Hs)/(1-Hs)] [(n/(n-1))]             #Eq. 11 from Jost 2008
+## [(Ht - Hs)/(1-Hs)]*[(n/(n-1))]             #Eq. 11 from Jost 2008. [(n/(n-1))] simplifies to 2, because I just have 2 populations.
 ((0.05167627-0.04605300)/(1-0.04605300))*2    #0.01178948 
 ## So, I have what I need. ASSUMING it's correct. I'd like the get the
 ## code working to verify.
