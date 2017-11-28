@@ -24,7 +24,8 @@ D_Jost(obj)
 ## [(Ht - Hs)/(1-Hs)]*[(n/(n-1))]             #Eq. 11 from Jost 2008. [(n/(n-1))] simplifies to 2, because I just have 2 populations.
 ((0.05167627-0.04605300)/(1-0.04605300))*2    #0.01178948 
 ## So, I have what I need. ASSUMING it's correct. I'd like the get the
-## code working to verify.
+## code working to verify. My structure analysis shows the two as quite
+## distinct, so if these are my results I'm in a pickle.
 
 ## To check whether or not missing data was the problem, I created a subet
 ## only including loci that I could see have data. I got the same results as
