@@ -18,7 +18,7 @@ pairwise_D(obj, linearized = FALSE, hsht_mean = "arithmetic")
 
 D_Jost(obj)
 ## I get $per.locus, $global.het, then $global.harm_mean = NA
-## and the same warning message. 
+## and the same warning message.
 
 
 ## To check whether or not missing data was the problem, I created a subet
