@@ -1,4 +1,4 @@
-## This R code calculates Jost's D using the package "mmod" (David Winter).
+## This R code calculates Jost's D using the package "mmod" (David Winter) from a genind object.
 ## Load required packages
 library("ape")
 library("genetics")    
