@@ -1,23 +1,57 @@
 ## This script first graphs estimated hereozygosity from the ipyrad stats files. 
 ## Then, I wrote my own script to estimate heterozygosity across individuals and across 
-## loci using a genind object.
 
 ## Part one- graphing heterozygosity from the ipyrad outfiles.
-setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/downstream_analysis/')
-sored_stats <- read.table("c155_sored_stats.txt", header = TRUE, fill = TRUE)
+setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/')
+sored_stats <- read.table("lowmsl_sored_stats.txt", header = TRUE, fill = TRUE)
 sored_stats
-shock_stats <- read.table("c155_shock_stats.txt", header = TRUE, fill = TRUE)
+shock_stats <- read.table("lowmsl_shock_stats.txt", header = TRUE, fill = TRUE)
 shock_stats
-both_stats <- read.table("combined_177_stats.txt", header = TRUE, fill = TRUE)
-both_stats
+#both_stats <- read.table("combined_177_stats.txt", header = TRUE, fill = TRUE)
 
 sored_hetero <- sored_stats$hetero_est
 shock_hetero <- shock_stats$hetero_est
-both_hetero <- both_stats$hetero_est
+
+add.alpha <- function(col, alpha=1){
+  if(missing(col))
+    stop("Please provide a vector of colours.")
+  apply(sapply(col, col2rgb)/255, 2, 
+        function(x) 
+          rgb(x[1], x[2], x[3], alpha=alpha))  
+}
+teal <- add.alpha("#458B74", alpha = 1)
+orange <- add.alpha("#FF7F50", alpha = 0.8)
+
+hist(shock_hetero, breaks=seq(0.004,0.028, by=0.001), col = teal, main = "Estimated Heterozygosity of Individuals", xlab = "Estimated Heterozygosity", ylab = "Frequency of Indiviudals", xlim = c(0.003,0.027), xaxt="n")
+hist(sored_hetero, breaks=seq(0.004,0.028, by=0.001), col= orange, xlim = c(0.004,0.027), xaxt="n", add=T)
+
+axis(1, at=c(0.004,0.027), labels=c("",""), lwd.ticks=0)
+axis(1, at=seq(0.004,0.027, by=.001), lwd=0, lwd.ticks=1)
+axis(2, at=c(0,17), labels=c("",""), lwd.ticks=0)
+axis(2, at=seq(0,17, by=5), lwd=0, lwd.ticks=1)
+
+
+
+
+
 
 mean(sored_hetero)
+sd(sored_hetero)
 mean(shock_hetero)
-mean(both_hetero)
+sd(shock_hetero)
+
+t.test(shock_hetero, sored_hetero)
+"   	Welch Two Sample t-test
+
+data:  shock_hetero and sored_hetero
+t = 5.3594, df = 64.714, p-value = 1.19e-06
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+0.001996189 0.004367938
+sample estimates:
+mean of x  mean of y 
+0.01588685 0.01270478 
+"
 
 hist(shock_hetero, breaks = 20, col = "blue", main = "shockleyi blue, soredium overlaid in pink", xlab = "Heterozygosity")
 hist(sored_hetero, breaks = 20, col=rgb(1,0,0,0.5), add=T)
@@ -33,10 +67,10 @@ library("ggplot2")
 library("adegenet")
 #SUBTRACT ONE FROM NUMBER OF LOCI
 #read in data
-obj_155 <- read.structure("c155_shock.str", n.ind = 118, onerowperind= FALSE, n.loc = 336, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
-indNames(obj_155) 
+obj_155_shock <- read.structure("10msl_shock.str", n.ind = 118, onerowperind= FALSE, n.loc = 41436, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
+indNames(obj_155_shock) 
 ploidy(obj_155) # should return 2 since we gave it 2 alleles for each marker.
-obj_155_soredium <- read.structure("c155_sored.str", n.ind = 37, onerowperind= FALSE, n.loc = 941, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
+obj_155_soredium <- read.structure("medmsl_sored.str", n.ind = 37, onerowperind= FALSE, n.loc = 49200, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
 indNames(obj_155_soredium) # I only get 247 because (24) low coverage individuals get filtered out.
 ploidy(obj_155_soredium)
 #Need to build a dataframe with individuals as rows, loci as columns and status as the values.
@@ -140,5 +174,13 @@ plot(div$Hexp, xlab="Loci number", ylab="Expected Heterozygosity",
      main="Expected Heterozygosity per Locus - E.soredium")
 plot(div$Hobs,div$Hexp, xlab="Hobs", ylab="Hexp", 
      main="Exp Heterozygosity as a function of Obs heterozygosity per locus-E.soredium")
+
+
+
+both_stats <- read.table("/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/final163_stats.txt", header = TRUE, fill = TRUE)
+oops <- both_stats$error_est
+mean(oops)
+mean(both_stats$reads_consens)
+
 
 
