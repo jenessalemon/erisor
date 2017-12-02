@@ -20,7 +20,7 @@ add.alpha <- function(col, alpha=1){
           rgb(x[1], x[2], x[3], alpha=alpha))  
 }
 teal <- add.alpha("#458B74", alpha = 1)
-orange <- add.alpha("#FF7F50", alpha = 0.8)
+orange <- add.alpha("#FF7F50", alpha = 1)
 
 hist(shock_hetero, breaks=seq(0.004,0.028, by=0.001), col = teal, main = "Estimated Heterozygosity of Individuals", xlab = "Estimated Heterozygosity", ylab = "Frequency of Indiviudals", xlim = c(0.003,0.027), xaxt="n")
 hist(sored_hetero, breaks=seq(0.004,0.028, by=0.001), col= orange, xlim = c(0.004,0.027), xaxt="n", add=T)
@@ -29,9 +29,69 @@ axis(1, at=c(0.004,0.027), labels=c("",""), lwd.ticks=0)
 axis(1, at=seq(0.004,0.027, by=.001), lwd=0, lwd.ticks=1)
 axis(2, at=c(0,17), labels=c("",""), lwd.ticks=0)
 axis(2, at=seq(0,17, by=5), lwd=0, lwd.ticks=1)
+##
+qplot(shock_hetero, geom="histogram")
+qplot(sored_hetero, geom="histogram")
 
 
+ggplot(data=shock_stats, aes(shock_stats$hetero_est)) + 
+  geom_histogram(breaks=seq(0.004,0.028, by=0.001), 
+                 col="black", 
+                 fill="#458B74", 
+                 alpha = 1) + 
+  ggtitle("Estimated Heterozygosity in E. shockleyi") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(size=22)) +
+  theme(text = element_text(size=18)) +
+  labs(x="Frequency of Individuals", y="Estimated Heterozygosity") + 
+  xlim(c(0.003,0.027)) + 
+  ylim(c(0,17)) +
+  geom_vline(xintercept = mean(shock_stats$hetero_est), col = "black", size = 1.7)
 
+ggplot(data=sored_stats, aes(sored_stats$hetero_est)) + 
+  geom_histogram(breaks=seq(0.004,0.028, by=0.001), 
+                 col="black", 
+                 fill="#FF7F50", 
+                 alpha = 1) + 
+  ggtitle("Estimated Heterozygosity in E. soredium") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(size=22)) +
+  theme(text = element_text(size=18)) +
+  labs(x="Frequency of Individuals", y="Estimated Heterozygosity") + 
+  xlim(c(0.003,0.027)) + 
+  ylim(c(0,17)) +
+  geom_vline(xintercept = mean(shock_stats$hetero_est), col = "black", size = 1.7)
+
+ggplot(data=shock_stats, aes(shock_stats$hetero_est)) + 
+  geom_histogram(breaks=seq(0.004,0.028, by=0.001), 
+                 col="black", 
+                 fill="#458B74", 
+                 alpha = 1) + 
+  ggtitle("Estimated Heterozygosity in E. shockleyi") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(size=22)) +
+  theme(text = element_text(size=18)) +
+  labs(x="Frequency of Individuals", y="Estimated Heterozygosity") + 
+  xlim(c(0.003,0.027)) + 
+  ylim(c(0,17)) +
+  #geom_vline(xintercept = mean(shock_stats$hetero_est), col = "black", size = 1.7) +
+  geom_vline(xintercept = mean(sored_stats$hetero_est), col = "#FF7F50", size = 1.7)
+
+
+ggplot(data=sored_stats, aes(sored_stats$hetero_est)) + 
+  geom_histogram(breaks=seq(0.004,0.028, by=0.001), 
+                 col="black", 
+                 fill="#FF7F50", 
+                 alpha = 1) + 
+  ggtitle("Estimated Heterozygosity in E. soredium") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(size=22)) +
+  theme(text = element_text(size=18)) +
+  labs(x="Frequency of Individuals", y="Estimated Heterozygosity") + 
+  xlim(c(0.003,0.027)) + 
+  ylim(c(0,17)) +
+  #geom_vline(xintercept = mean(sored_stats$hetero_est), col = "black", size = 1.7) +
+  geom_vline(xintercept = mean(shock_stats$hetero_est), col = "#458B74", size = 1.7)
 
 
 
@@ -159,28 +219,65 @@ hist(shock_hetero_inds, breaks = 20, col = "blue", ylab = "Frequency of Individu
 hist(sored_hetero_inds, breaks = 20, col=rgb(1,0,0,0.5), add=T)
 
 #################### Obs vs Exp Heterozygostity ############################
-div <- summary(obj_155)
-plot(div$Hobs, xlab="Loci number", ylab="Observed Heterozygosity", 
-     main="Observed Heterozygosity per Locus - E.shockleyi")
-plot(div$Hexp, xlab="Loci number", ylab="Expected Heterozygosity", 
-     main="Expected Heterozygosity per Locus - E.shockleyi")
-plot(div$Hobs,div$Hexp, xlab="Hobs", ylab="Hexp", 
-     main="Exp Heterozygosity as a function of Obs heterozygosity per locus-E.shockleyi")
+# Read in the data
+obj_155_soredium <- read.structure('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/c155_sored.str', n.ind = 37, onerowperind= FALSE, n.loc = 942, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
+obj_155_soredium
+obj_155_shockleyi <- read.structure('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/c155_shock.str', n.ind = 118, onerowperind= FALSE, n.loc = 337, col.lab = 1, col.pop = 0, col.others = NULL, row.marknames = 0)
+obj_155_shockleyi
 
-div <- summary(obj_155_soredium)
-plot(div$Hobs, xlab="Loci number", ylab="Observed Heterozygosity", 
-     main="Observed Heterozygosity per Locus - E.soredium")
-plot(div$Hexp, xlab="Loci number", ylab="Expected Heterozygosity", 
-     main="Expected Heterozygosity per Locus - E.soredium")
-plot(div$Hobs,div$Hexp, xlab="Hobs", ylab="Hexp", 
+div_sored <- summary(obj_155_soredium)
+div_shock <- summary(obj_155_shockleyi)
+
+plot(div_sored$Hobs,div_sored$Hexp, xlab="Hobs", ylab="Hexp", 
      main="Exp Heterozygosity as a function of Obs heterozygosity per locus-E.soredium")
 
+plot(div_shock$Hobs,div_shock$Hexp, xlab="Hobs", ylab="Hexp", 
+     main="Exp Heterozygosity as a function of Obs heterozygosity per locus-E.shockleyi")
 
 
-both_stats <- read.table("/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC/final163_stats.txt", header = TRUE, fill = TRUE)
-oops <- both_stats$error_est
-mean(oops)
-mean(both_stats$reads_consens)
+barplot(div_sored$Hexp-div_sored$Hobs, main="Heterozygosity: expected-observed",
+        ylab="Hexp - Hobs")
+t.test(div_sored$Hexp,div_sored$Hobs,pair=T,var.equal=TRUE,alter="greater")
+"          Paired t-test
+
+data:  div_sored$Hexp and div_sored$Hobs
+t = 18.567, df = 941, p-value < 2.2e-16
+alternative hypothesis: true difference in means is greater than 0
+95 percent confidence interval:
+  0.05429225        Inf
+sample estimates:
+  mean of the differences 
+0.05957536 "
+
+barplot(div_shock$Hexp-div_shock$Hobs, main="Heterozygosity: expected-observed",
+        ylab="Hexp - Hobs")
+t.test(div_shock$Hexp,div_shock$Hobs,pair=T,var.equal=TRUE,alter="greater")
+"	        Paired t-test
+
+data:  div_shock$Hexp and div_shock$Hobs
+t = 8.1937, df = 336, p-value = 2.689e-15
+alternative hypothesis: true difference in means is greater than 0
+95 percent confidence interval:
+0.02573512        Inf
+sample estimates:
+mean of the differences 
+0.03222134 "
+
+
+
+summary(div_sored$Hobs)
+summary(div_shock$Hobs)
+summary(div_sored$Hexp)
+summary(div_shock$Hexp)
+
+mean(div_sored$Hexp) #0.1190287
+mean(div_shock$Hexp) #0.05072056
+mean(div_sored$Hexp) - mean(div_sored$Hobs) #0.05957536
+mean(div_shock$Hexp) - mean(div_shock$Hobs) #0.03222134
+
+
+
+
 
 
 
