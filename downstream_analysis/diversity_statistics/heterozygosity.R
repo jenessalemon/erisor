@@ -9,59 +9,7 @@ shock_stats <- read.table("lowmsl_shock_stats.txt", header = TRUE, fill = TRUE)
 shock_stats
 #both_stats <- read.table("combined_177_stats.txt", header = TRUE, fill = TRUE)
 
-sored_hetero <- sored_stats$hetero_est
-shock_hetero <- shock_stats$hetero_est
-
-add.alpha <- function(col, alpha=1){
-  if(missing(col))
-    stop("Please provide a vector of colours.")
-  apply(sapply(col, col2rgb)/255, 2, 
-        function(x) 
-          rgb(x[1], x[2], x[3], alpha=alpha))  
-}
-teal <- add.alpha("#458B74", alpha = 1)
-orange <- add.alpha("#FF7F50", alpha = 1)
-
-hist(shock_hetero, breaks=seq(0.004,0.028, by=0.001), col = teal, main = "Estimated Heterozygosity of Individuals", xlab = "Estimated Heterozygosity", ylab = "Frequency of Indiviudals", xlim = c(0.003,0.027), xaxt="n")
-hist(sored_hetero, breaks=seq(0.004,0.028, by=0.001), col= orange, xlim = c(0.004,0.027), xaxt="n", add=T)
-
-axis(1, at=c(0.004,0.027), labels=c("",""), lwd.ticks=0)
-axis(1, at=seq(0.004,0.027, by=.001), lwd=0, lwd.ticks=1)
-axis(2, at=c(0,17), labels=c("",""), lwd.ticks=0)
-axis(2, at=seq(0,17, by=5), lwd=0, lwd.ticks=1)
-##
-qplot(shock_hetero, geom="histogram")
-qplot(sored_hetero, geom="histogram")
-
-
-ggplot(data=shock_stats, aes(shock_stats$hetero_est)) + 
-  geom_histogram(breaks=seq(0.004,0.028, by=0.001), 
-                 col="black", 
-                 fill="#458B74", 
-                 alpha = 1) + 
-  ggtitle("Estimated Heterozygosity in E. shockleyi") +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  theme(plot.title = element_text(size=22)) +
-  theme(text = element_text(size=18)) +
-  labs(x="Frequency of Individuals", y="Estimated Heterozygosity") + 
-  xlim(c(0.003,0.027)) + 
-  ylim(c(0,17)) +
-  geom_vline(xintercept = mean(shock_stats$hetero_est), col = "black", size = 1.7)
-
-ggplot(data=sored_stats, aes(sored_stats$hetero_est)) + 
-  geom_histogram(breaks=seq(0.004,0.028, by=0.001), 
-                 col="black", 
-                 fill="#FF7F50", 
-                 alpha = 1) + 
-  ggtitle("Estimated Heterozygosity in E. soredium") +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  theme(plot.title = element_text(size=22)) +
-  theme(text = element_text(size=18)) +
-  labs(x="Frequency of Individuals", y="Estimated Heterozygosity") + 
-  xlim(c(0.003,0.027)) + 
-  ylim(c(0,17)) +
-  geom_vline(xintercept = mean(shock_stats$hetero_est), col = "black", size = 1.7)
-
+## First we plot shockelyi
 ggplot(data=shock_stats, aes(shock_stats$hetero_est)) + 
   geom_histogram(breaks=seq(0.004,0.028, by=0.001), 
                  col="black", 
@@ -77,8 +25,8 @@ ggplot(data=shock_stats, aes(shock_stats$hetero_est)) +
   #geom_vline(xintercept = mean(shock_stats$hetero_est), col = "black", size = 1.7) +
   geom_vline(xintercept = mean(sored_stats$hetero_est), col = "#FF7F50", size = 1.7)
 
-
-ggplot(data=sored_stats, aes(sored_stats$hetero_est)) + 
+## Then soredium
+sored_het <- ggplot(data=sored_stats, aes(sored_stats$hetero_est)) + 
   geom_histogram(breaks=seq(0.004,0.028, by=0.001), 
                  col="black", 
                  fill="#FF7F50", 
@@ -93,13 +41,7 @@ ggplot(data=sored_stats, aes(sored_stats$hetero_est)) +
   #geom_vline(xintercept = mean(sored_stats$hetero_est), col = "black", size = 1.7) +
   geom_vline(xintercept = mean(shock_stats$hetero_est), col = "#458B74", size = 1.7)
 
-
-
-mean(sored_hetero)
-sd(sored_hetero)
-mean(shock_hetero)
-sd(shock_hetero)
-
+## Now we do a t-test to determine the difference between the two means
 t.test(shock_hetero, sored_hetero)
 "   	Welch Two Sample t-test
 
@@ -112,11 +54,6 @@ sample estimates:
 mean of x  mean of y 
 0.01588685 0.01270478 
 "
-
-hist(shock_hetero, breaks = 20, col = "blue", main = "shockleyi blue, soredium overlaid in pink", xlab = "Heterozygosity")
-hist(sored_hetero, breaks = 20, col=rgb(1,0,0,0.5), add=T)
-
-t.test(sored_hetero,shock_hetero)
 
 ## Part 2- Getting heterozygosity estimates from a genind object.
 setwd('/Users/jimblotter/Desktop/Grad_School/Data_Analysis/erisor/QC') #remember to put the .str file there!
